@@ -3,8 +3,6 @@ package ru.pelengator;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Alert;
@@ -12,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
-import ru.pelengator.model.Expirement;
+import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
@@ -131,7 +129,7 @@ public class DetectorViewModel {
     private ExpReset exp_Reset;
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Expirement experiment;//ссылка на текущий эксперимент
+    private static Experiment experiment;//ссылка на текущий эксперимент
 
     /**
      * Инициализация
@@ -1487,11 +1485,11 @@ public class DetectorViewModel {
         this.NETD.set(NETD);
     }
 
-    public static Expirement getExperiment() {
+    public static Experiment getExperiment() {
         return experiment;
     }
 
-    public static void setExperiment(Expirement experiment) {
+    public static void setExperiment(Experiment experiment) {
         DetectorViewModel.experiment = experiment;
     }
 

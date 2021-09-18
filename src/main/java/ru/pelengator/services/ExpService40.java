@@ -15,7 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.SecondaryController;
-import ru.pelengator.model.Expirement;
+import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.utils.StatisticsUtils;
 
@@ -25,6 +25,8 @@ import java.text.NumberFormat;
 import java.util.Date;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.utils.Utils.toArrayList;
+
 
 /**
  * Сервис сбора данных при 40
@@ -40,7 +42,7 @@ public class ExpService40 extends Service<Void> {
     public double[] dataArraySred_40;
     public StatisticsUtils[] dataArrayStat_40;
     ObservableList<Frame> frameArrayList;
-    private Expirement currentExp;
+    private Experiment currentExp;
     private int frame_number;
     private int start_ch;
     private int stop_ch;
@@ -60,7 +62,7 @@ public class ExpService40 extends Service<Void> {
             protected Void call() throws Exception {
                 currentExp = detectorViewModel.getExperiment();
                 if (currentExp == null) {
-                    currentExp = new Expirement(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
+                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
                 }
                 updateMessage("Старт Сервиса расчета 40 градусов");
                 updateProgress(0.0, 1);
@@ -272,7 +274,7 @@ public class ExpService40 extends Service<Void> {
         currentExp.setDataArray40(dataArray40);
         currentExp.setDataArraySred_40(dataArraySred_40);
         currentExp.setSredZnach40(sredZnach40);
-        currentExp.setFrameArrayList40(frameArrayList);
+        currentExp.setFrameArrayList40(toArrayList(frameArrayList));
         currentExp.setEndExpDate(new Date(System.currentTimeMillis()));
         detectorViewModel.setExperiment(currentExp);
     }

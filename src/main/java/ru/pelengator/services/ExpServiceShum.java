@@ -16,7 +16,7 @@ import javafx.stage.Modality;
 import ru.pelengator.App;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.SecondaryController;
-import ru.pelengator.model.Expirement;
+import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.utils.StatisticsUtils;
 
@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.utils.Utils.toArrayList;
 
 /**
  * Сервис сбора данных при 30 градусх и подсчета шума
@@ -43,7 +44,7 @@ public class ExpServiceShum extends Service<Void> {
     private double[] dataArraySred_30;
     private double maxSKO = 0d;
     private double maxSred = 0d;
-    private Expirement currentExp;
+    private Experiment currentExp;
     public double[] dataArraySKO30;
     public static StatisticsUtils[] dataArrayStat_30;
     static ObservableList<Frame> frameArrayList;
@@ -67,7 +68,7 @@ public class ExpServiceShum extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 //создаем эксперимент
-                currentExp = new Expirement(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
+                currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
                 updateMessage("Старт Сервиса расчета шума");
                 updateProgress(0.0, 1);
                 updateMessage("Сброс переменных");
@@ -380,7 +381,7 @@ public class ExpServiceShum extends Service<Void> {
         //сохраняем браковочные показатели
         currentExp.setBrakTimes(brakTimes);//параметр брака по шуму на канал
         currentExp.setMatrix(matrix);//матрица деселекции
-        currentExp.setFrameArrayList30(frameArrayList);//массив кадров
+        currentExp.setFrameArrayList30(toArrayList(frameArrayList));//массив кадров
         //сохраняем параметры стенда
         saveStendParams(currentExp, detectorViewModel);
         //устанавливаем текущий эксперимент
@@ -393,7 +394,7 @@ public class ExpServiceShum extends Service<Void> {
      * @param currentExp
      * @param detectorViewModel
      */
-    private void saveStendParams(Expirement currentExp, DetectorViewModel detectorViewModel) {
+    private void saveStendParams(Experiment currentExp, DetectorViewModel detectorViewModel) {
         currentExp.setVr0(detectorViewModel.getVr0());
         currentExp.setVva(detectorViewModel.getVva());
         currentExp.setVu4(detectorViewModel.getVu4());

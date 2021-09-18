@@ -22,7 +22,7 @@ import org.decimal4j.util.DoubleRounder;
 import ru.pelengator.App;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.SecondaryController;
-import ru.pelengator.model.Expirement;
+import ru.pelengator.model.Experiment;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -40,7 +40,7 @@ public class ExpServiceNEDT extends Service<Void> {
     private static SecondaryController controller;
     private static DetectorViewModel detectorViewModel;
     //исходные данные
-    private Expirement currentExp;
+    private Experiment currentExp;
 
     public double[] dataArraySred_30;
     public double[] dataArraySred_40;

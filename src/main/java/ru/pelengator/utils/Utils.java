@@ -1,12 +1,16 @@
 package ru.pelengator.utils;
 
 import at.favre.lib.bytes.Bytes;
+import com.google.gson.Gson;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.model.Frame;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utils {
     /**
@@ -36,6 +40,7 @@ public class Utils {
         }
         return i;
     }
+
     /**
      * Конвертер байтового массива в интовый с изменением порядка байт . Значения по 2 байта
      *
@@ -51,6 +56,7 @@ public class Utils {
         }
         return intArray;
     }
+
     public static void savefile(ObservableList<Frame> frameArrayList, String fileName) {
         try (FileOutputStream fileOutputStream = new FileOutputStream("./" + fileName + "_" + DetectorViewModel.getVr0() + ".txt", false)) {
             StringBuffer sb = new StringBuffer();
@@ -79,9 +85,50 @@ public class Utils {
                 sb.append("\n");
             }
             byte[] buff = sb.toString().getBytes();
-            fileOutputStream.write(buff, 0, buff.length-1);
+            fileOutputStream.write(buff, 0, buff.length - 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * ObservableList в ArrayList
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> ArrayList<T> toArrayList(ObservableList<T> list) {
+        ArrayList<T> arrayList = new ArrayList<>();
+        arrayList.addAll(arrayList);
+        return arrayList;
+    }
+
+    /**
+     * ArrayList в ObservableList
+     *
+     * @param arrayList
+     * @param <T>
+     * @return
+     */
+    public static <T> ObservableList<T> fromArrayList(ArrayList<T> arrayList) {
+        ObservableList<T> list = FXCollections.observableArrayList(arrayList);
+        return list;
+    }
+
+    /**
+     * Лист в JSON строку
+     *
+     * @param arrayList
+     * @param <T>
+     * @return
+     */
+    public static <T> String arraylistToString(ArrayList<T> arrayList) {
+        Gson gson = new Gson();
+        StringBuilder sb = new StringBuilder();
+        for (T obj : arrayList) {
+            sb.append(gson.toJson(obj));
+        }
+        return sb.toString();
     }
 }
