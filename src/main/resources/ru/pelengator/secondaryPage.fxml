@@ -1,0 +1,936 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.SecondaryController">
+   <children>
+      <BorderPane layoutX="135.0" layoutY="99.0" prefHeight="900.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <TabPane fx:id="tab_pan" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+              <tabs>
+                <Tab fx:id="tab_explore" text="Установка параметров ФПУ">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <SplitPane dividerPositions="0.7518891687657431" layoutX="314.0" layoutY="318.0" prefHeight="846.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                       <children>
+                                          <SplitPane dividerPositions="0.4156769596199525, 0.5724465558194775, 0.6460807600950119" layoutX="443.0" layoutY="355.0" orientation="VERTICAL" prefHeight="844.0" prefWidth="1276.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <items>
+                                              <AnchorPane fx:id="chart_pane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                                              <AnchorPane fx:id="matrix" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                   <children>
+                                                      <GridPane layoutX="63.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="117.0" prefWidth="17.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1172.0" AnchorPane.topAnchor="2.0">
+                                                        <columnConstraints>
+                                                          <ColumnConstraints />
+                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                        </columnConstraints>
+                                                        <rowConstraints>
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="18.0" minHeight="10.0" prefHeight="18.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="8.0" minHeight="8.0" prefHeight="8.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                        </rowConstraints>
+                                                         <children>
+                                                            <Label text="H" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label layoutX="15.0" layoutY="11.0" text="G" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label layoutX="15.0" layoutY="23.0" text="F" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label layoutX="15.0" layoutY="34.0" text="E" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="D" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="C" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="B" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="A" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="8">
+                                                               <font>
+                                                                  <Font size="9.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </GridPane>
+                                                   </children></AnchorPane>
+                                                <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                   <children>
+                                                      <ToolBar layoutX="142.0" layoutY="-2.0" prefHeight="56.0" prefWidth="1189.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <items>
+                                                          <Button fx:id="but_setAllPixel" mnemonicParsing="false" prefHeight="43.0" prefWidth="88.0" style="-fx-background-color: #10d015;" text="Включить всё" textFill="#0a0a0aad" textOverrun="CLIP">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_setNonePixel" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="99.0" style="-fx-background-color: #FFA07A;" text="Выключить всё">
+                                                               <font>
+                                                                  <Font size="11.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_A" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FFD700;" text="A">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font></Button>
+                                                            <Button fx:id="but_line_B" layoutX="205.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FFD700;" text="B">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_C" layoutX="243.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FFD700;" text="C">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_D" layoutX="281.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FFD700;" text="D">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_E" layoutX="319.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FF7F50;" text="E">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_F" layoutX="357.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FF7F50;" text="F">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_G" layoutX="395.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FF7F50;" text="G">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Button fx:id="but_line_H" layoutX="433.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="34.0" style="-fx-background-color: #FF7F50;" text="H">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                            <Button fx:id="but_optParam" layoutX="131.0" layoutY="10.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="213.0" text="Подбор  опт. параметров">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                            <Button fx:id="but_setDark" mnemonicParsing="false" prefHeight="43.0" prefWidth="111.0" text="Темновой" textFill="#da4c4c" />
+                                                            <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                            <Button fx:id="but_param1" mnemonicParsing="false" prefHeight="43.0" prefWidth="147.0" text="Запрос основных параметров" textAlignment="CENTER" textFill="#177553" wrapText="true" />
+                                                            <Button fx:id="but_param2" mnemonicParsing="false" prefHeight="43.0" prefWidth="137.0" text="Запрос деселекции  режима работы" textAlignment="CENTER" textFill="#177553" wrapText="true" />
+                                                        </items>
+                                                      </ToolBar>
+                                                   </children>
+                                                </AnchorPane>
+                                                <AnchorPane fx:id="time_pane" layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="291.0" prefWidth="1274.0" />
+                                            </items>
+                                          </SplitPane>
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="834.0" prefWidth="343.0">
+                                       <children>
+                                          <SplitPane dividerPositions="0.5910224438902744, 0.844139650872818" layoutX="78.0" layoutY="283.0" orientation="VERTICAL" prefHeight="844.0" prefWidth="316.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <items>
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="526.0" prefWidth="389.0">
+                                                   <children>
+                                                      <GridPane fx:id="gridPane" alignment="CENTER" layoutX="-26.0" layoutY="190.0" prefHeight="383.0" prefWidth="314.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Управление детектором" textAlignment="CENTER" textFill="#ab5151" underline="true" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                               <padding>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </padding>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Режим" GridPane.rowIndex="7">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Направление сканирования" GridPane.rowIndex="8">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Переключение емкостей" GridPane.rowIndex="9">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Напряжение дат. темп (мВ)" GridPane.rowIndex="16">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Время интегрирования (мкс)" GridPane.rowIndex="11">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Напряжение VR0 (мВ)" GridPane.rowIndex="12">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Напряжение VVA (мВ)" GridPane.rowIndex="13">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <TextField fx:id="tf_TINT" alignment="CENTER" promptText="20" text="20" GridPane.columnIndex="1" GridPane.rowIndex="11">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_VR0" alignment="CENTER" promptText="800" text="800" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                  <Font name="Arial Bold Italic" size="12.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_VVA" alignment="CENTER" promptText="1000" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="13">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                  <Font name="Arial Bold Italic" size="12.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_UC" alignment="CENTER" promptText="5000" text="5000" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_VU4" alignment="CENTER" promptText="2500" text="5000" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </TextField>
+                                                            <ChoiceBox fx:id="chob_mode" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                               <cursor>
+                                                                  <Cursor fx:constant="DEFAULT" />
+                                                               </cursor>
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ChoiceBox>
+                                                            <ChoiceBox fx:id="chob_DIR" layoutX="252.0" layoutY="106.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                                               <cursor>
+                                                                  <Cursor fx:constant="DEFAULT" />
+                                                               </cursor>
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ChoiceBox>
+                                                            <ChoiceBox fx:id="chob_CCC" layoutX="252.0" layoutY="137.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                                               <cursor>
+                                                                  <Cursor fx:constant="DEFAULT" />
+                                                               </cursor>
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ChoiceBox>
+                                                            <Button fx:id="but_powerOn" layoutX="351.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Включить" textFill="#316f38" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Button>
+                                                            <Label layoutX="15.0" layoutY="352.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Сброс в исходное состояние" GridPane.rowIndex="15">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="RIGHT" layoutX="20.0" layoutY="111.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Подать VU4 (мВ)" textAlignment="RIGHT" GridPane.rowIndex="5">
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets right="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="RIGHT" layoutX="15.0" layoutY="75.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Подать UC (мВ)" textAlignment="RIGHT" GridPane.rowIndex="4">
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets right="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label alignment="CENTER" contentDisplay="RIGHT" layoutX="15.0" layoutY="115.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Подать VDD (мВ)" textAlignment="RIGHT" GridPane.rowIndex="3">
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets right="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <CheckBox fx:id="cheb_Avdd" alignment="CENTER" contentDisplay="CENTER" layoutX="202.0" layoutY="115.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Подать" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Button fx:id="but_powerOff" layoutX="207.0" layoutY="58.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Выключить" textFill="#e41414" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <opaqueInsets>
+                                                                  <Insets />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Button>
+                                                            <Label fx:id="lb_tSence" alignment="CENTER" layoutX="309.0" layoutY="245.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Статус" textFill="#5e5b1c" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="16">
+                                                               <font>
+                                                                  <Font name="Baskerville Old Face" size="18.0" />
+                                                               </font></Label>
+                                                            <Label fx:id="lb_reset" alignment="CENTER" layoutX="309.0" layoutY="424.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Статус" GridPane.columnIndex="2" GridPane.rowIndex="15" />
+                                                            <CheckBox fx:id="cheb_reset" alignment="CENTER" contentDisplay="CENTER" layoutX="207.0" layoutY="410.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Сброс" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+                                                            <Slider fx:id="sl_VR0" onMouseReleased="#sliderVR0Fire" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+                                                            <Slider fx:id="sl_VVA" layoutX="309.0" layoutY="291.0" onMouseDragReleased="#sliderVVAFire" onMouseReleased="#sliderVVAFire" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+                                                            <Label fx:id="lab_status" prefHeight="18.0" prefWidth="379.0" text="Test connection" textAlignment="CENTER" textFill="#e80b3b" GridPane.rowIndex="21">
+                                                               <font>
+                                                                  <Font name="Book Antiqua Italic" size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Питание МКС" GridPane.rowIndex="18">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin></Label>
+                                                            <Button fx:id="but_startMKS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Запуск!" textFill="#0c2f0d" GridPane.columnIndex="1" GridPane.rowIndex="18">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Button>
+                                                            <Button fx:id="bt_reconnect" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Реконнект" GridPane.columnIndex="2" GridPane.rowIndex="21" />
+                                                            <TextField fx:id="tf_tSence" alignment="CENTER" layoutX="201.0" layoutY="119.0" promptText="900-970" text="940" GridPane.columnIndex="2" GridPane.rowIndex="16">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                                               </GridPane.margin></TextField>
+                                                         </children>
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="176.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="85.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="107.0" />
+                                                         </columnConstraints>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                         <rowConstraints>
+                                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="30.0" prefHeight="32.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="16.0" minHeight="9.0" prefHeight="9.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </children>
+                                                </AnchorPane>
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="190.0" prefWidth="389.0">
+                                                   <children>
+                                                      <GridPane alignment="CENTER" layoutX="-49.0" layoutY="83.0" prefHeight="216.0" prefWidth="314.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Доп. управление" textAlignment="CENTER" textFill="#ab5151" underline="true" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                               <padding>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </padding>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Выход на режим" GridPane.rowIndex="2">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Чтение каналов [с]  [до]" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Button fx:id="but_regim" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Запуск!" textFill="#0c2f0d" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Button>
+                                                            <TextField fx:id="tf_first_ch" alignment="CENTER" promptText="1" text="1" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </TextField>
+                                                            <Button fx:id="but_resetBarchart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Сбросить" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                            </Button>
+                                                            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="352.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Cброс границ" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <TextField fx:id="tf_regim" alignment="CENTER" layoutX="193.0" layoutY="62.0" promptText="Не более 4 мин" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_last_ch" alignment="CENTER" layoutX="193.0" layoutY="62.0" promptText="288" text="288" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin></TextField>
+                                                            <Label layoutX="20.0" layoutY="86.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Частота чтения данных (мс)" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <TextField fx:id="tf_data_fps" alignment="CENTER" layoutX="193.0" layoutY="64.0" promptText="200" text="200" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </TextField>
+                                                            <TextField fx:id="tf_pause_video" alignment="CENTER" promptText="50" text="50" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin></TextField>
+                                                            <Label layoutX="20.0" layoutY="114.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Частота отобр. графика (мс)" GridPane.rowIndex="6" />
+                                                            <TextField fx:id="tf_norm" alignment="CENTER" layoutX="193.0" layoutY="139.0" promptText="1500" text="1500" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin></TextField>
+                                                            <Label layoutX="15.0" layoutY="137.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Границы темнового (+- мВ)" GridPane.rowIndex="7" />
+                                                         </children>
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="172.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="105.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="101.0" />
+                                                         </columnConstraints>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                         <rowConstraints>
+                                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="21.0" prefHeight="21.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="40.0" minHeight="22.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="40.0" minHeight="24.0" prefHeight="24.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </children>
+                                                </AnchorPane>
+                                                <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="328.0" prefWidth="314.0">
+                                                   <children>
+                                                      <GridPane alignment="CENTER" prefHeight="231.0" prefWidth="314.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Статистика по кадру" textAlignment="CENTER" textFill="#ab5151" underline="true" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                               <padding>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </padding>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                               <opaqueInsets>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </opaqueInsets>
+                                                            </Label>
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Maкс знач (мВ)" textFill="#978c29" GridPane.rowIndex="2">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label layoutX="20.0" layoutY="68.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Сред знач (мВ)" textFill="#a13232" GridPane.rowIndex="3">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label layoutX="15.0" layoutY="91.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Мин знач (мВ)" textFill="#46a17a" GridPane.rowIndex="4">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label layoutX="15.0" layoutY="106.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="СКО (мВ)" textFill="#3e67b9" GridPane.rowIndex="5">
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </Label>
+                                                            <Label fx:id="lb_out1_max" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="269.0" layoutY="35.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Итог:" textFill="#20bb27" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                            <Label fx:id="lb_out1_sred" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="111.0" layoutY="53.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label fx:id="lb_out1_min" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="111.0" layoutY="72.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                            <Label fx:id="lb_out1_sko" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="111.0" layoutY="90.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                            <Label fx:id="lb_out2_max" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                            <Label fx:id="lb_out2_sred" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                                            <Label fx:id="lb_out2_min" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                                            <Label fx:id="lb_out2_sko" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                                            <Label fx:id="lb_out3_max" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                            <Label fx:id="lb_out3_sred" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                                            <Label fx:id="lb_out3_min" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                                            <Label fx:id="lb_out3_sko" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                                                            <Label fx:id="lb_out4_max" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                                            <Label fx:id="lb_out4_sred" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                                                            <Label fx:id="lb_out4_min" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                                                            <Label fx:id="lb_out4_sko" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                                                            <Label fx:id="lb_out_max" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" textFill="#20bb27" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                                            <Label fx:id="lb_out_sred" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" textFill="#20bb27" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                                            <Label fx:id="lb_out_min" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" textFill="#20bb27" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                                            <Label fx:id="lb_out_sko" alignment="CENTER_RIGHT" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" textFill="#20bb27" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                                            <ToggleButton fx:id="tBut_OUT1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#chenMode" selected="true" text="OUT1" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ToggleButton>
+                                                            <ToggleButton fx:id="tBut_OUT2" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#chenMode" selected="true" text="OUT2" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ToggleButton>
+                                                            <ToggleButton fx:id="tBut_OUT3" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#chenMode" selected="true" text="OUT3" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ToggleButton>
+                                                            <ToggleButton fx:id="tBut_OUT4" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#chenMode" selected="true" text="OUT4" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                                               <font>
+                                                                  <Font size="10.0" />
+                                                               </font>
+                                                               <GridPane.margin>
+                                                                  <Insets bottom="5.0" left="5.0" top="5.0" />
+                                                               </GridPane.margin>
+                                                            </ToggleButton>
+                                                         </children>
+                                                         <columnConstraints>
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="90.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="50.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="50.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="9.0" prefWidth="50.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="50.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="50.0" />
+                                                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="0.0" prefWidth="0.0" />
+                                                         </columnConstraints>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                         <padding>
+                                                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                         </padding>
+                                                         <rowConstraints>
+                                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="19.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="19.0" prefHeight="19.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                                            <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                         </rowConstraints>
+                                                      </GridPane>
+                                                   </children>
+                                                </AnchorPane>
+                                            </items>
+                                          </SplitPane>
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab fx:id="tab_experiment" text="Расчет шума и ЭШРТ">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="textArea_shum" editable="false" layoutX="1087.0" layoutY="392.0" prefHeight="135.0" prefWidth="314.0" promptText="Тут будут промежуточные данные.." />
+                              <Label layoutX="1086.0" layoutY="95.0" prefHeight="41.0" prefWidth="130.0" text="Количество отсчетов" />
+                              <Label layoutX="1084.0" layoutY="136.0" prefHeight="24.0" prefWidth="166.0" text="Регистрируемые каналы:" />
+                              <TextField fx:id="tex_firstChanExp" alignment="CENTER" layoutX="1220.0" layoutY="160.0" prefHeight="17.0" prefWidth="73.0" promptText="1" text="1" />
+                              <TextField fx:id="tex_lastChanExp" alignment="CENTER" layoutX="1334.0" layoutY="160.0" prefHeight="17.0" prefWidth="73.0" promptText="288" text="288" />
+                              <Label layoutX="1085.0" layoutY="248.0" prefHeight="30.0" prefWidth="242.0" text="Шум канала. Превышение не более Х раз:" />
+                              <TextField fx:id="tex_brak" alignment="CENTER" layoutX="1334.0" layoutY="251.0" prefHeight="25.0" prefWidth="40.0" promptText="2.0" text="2.0" />
+                              <Separator layoutX="1416.0" layoutY="8.0" orientation="VERTICAL" prefHeight="815.0" prefWidth="15.0" AnchorPane.bottomAnchor="-17.0" AnchorPane.leftAnchor="1416.0" AnchorPane.topAnchor="8.0" />
+                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1428.0" layoutY="250.0" prefHeight="27.0" prefWidth="158.0" text="Эксперимент">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="but_saveFileExp" layoutX="1436.0" layoutY="575.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Сохранить файл" />
+                              <TextField fx:id="tex_count" alignment="CENTER" layoutX="1220.0" layoutY="103.0" prefHeight="25.0" prefWidth="51.0" promptText="1024" text="128" />
+                              <VBox fx:id="vb_sko30" layoutX="10.0" layoutY="106.0" prefHeight="293.0" prefWidth="506.0" />
+                              <Label alignment="CENTER" layoutX="30.0" layoutY="441.0" prefHeight="33.0" prefWidth="466.0" text="ЭШРТ (мК)" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="vb_netd" layoutX="14.0" layoutY="472.0" prefHeight="303.0" prefWidth="499.0" />
+                              <Label alignment="CENTER" layoutX="581.0" layoutY="439.0" prefHeight="33.0" prefWidth="477.0" text="Поканальное распределение ЭШРТ (кол. вхождений)" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="vb_sred_30_40" layoutX="519.0" layoutY="106.0" prefHeight="292.0" prefWidth="552.0" />
+                              <Label alignment="CENTER" layoutX="121.0" layoutY="61.0" prefHeight="33.0" prefWidth="273.0" text="Шум (мВ)" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" layoutX="601.0" layoutY="62.0" prefHeight="33.0" prefWidth="407.0" text="Среднее значение сигнала при 30 и 40 С (мВ)" textAlignment="CENTER">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="1186.0" layoutY="164.0" prefHeight="17.0" prefWidth="20.0" text="С" />
+                              <Button fx:id="but_saveFileExp1" layoutX="1436.0" layoutY="630.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Печать отчета" />
+                              <Label layoutX="1137.0" layoutY="202.0" prefHeight="41.0" prefWidth="227.0" text="Браковочные параметры">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="1085.0" layoutY="278.0" prefHeight="27.0" prefWidth="242.0" text="ЭШРТ канала. Не более, мК" />
+                              <TextField fx:id="tex_brak_count" alignment="CENTER" layoutX="1334.0" layoutY="279.0" prefHeight="25.0" prefWidth="40.0" promptText="30" text="50" />
+                              <Label layoutX="1085.0" layoutY="308.0" prefHeight="22.0" prefWidth="242.0" text="Ср. ЭШРТ по ФПУ. Не более, мК" />
+                              <TextField fx:id="tex_brak_countFPU" alignment="CENTER" layoutX="1334.0" layoutY="307.0" prefHeight="25.0" prefWidth="40.0" promptText="30" text="30" />
+                              <Button fx:id="but_start_40" alignment="CENTER" contentDisplay="CENTER" layoutX="1429.0" layoutY="332.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="159.0" style="-fx-background-color: #FFD700;" text="2.  Накопление при 40">
+                                 <font>
+                                    <Font name="System Bold Italic" size="11.0" />
+                                 </font>
+                              </Button>
+                              <Label layoutX="1130.0" layoutY="66.0" prefHeight="25.0" prefWidth="227.0" text="Установочные параметры">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" layoutX="1130.0" layoutY="347.0" prefHeight="41.0" prefWidth="227.0" text="Сводка...">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label alignment="CENTER" layoutX="1128.0" layoutY="533.0" prefHeight="41.0" prefWidth="227.0" text="Итоговые данные">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <GridPane fx:id="gp_text" gridLinesVisible="true" layoutX="1094.0" layoutY="570.0" prefHeight="221.0" prefWidth="324.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="10.0" prefWidth="200.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="130.0" minWidth="10.0" prefWidth="70.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="54.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="34.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="47.0" minHeight="6.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="53.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="48.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="32.0" prefWidth="106.0" text="Знач." GridPane.columnIndex="1">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="32.0" prefWidth="115.0" text="Параметр">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" layoutX="112.0" layoutY="10.0" prefHeight="42.0" prefWidth="125.0" text="Соотв." GridPane.columnIndex="2">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="41.0" prefWidth="127.0" text="Ср. Шум (мВ)" GridPane.rowIndex="1">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label fx:id="lab_sco30" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="lab_sco30Sootv" alignment="CENTER" contentDisplay="CENTER" layoutX="112.0" layoutY="34.0" prefHeight="39.0" prefWidth="115.0" text="---" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label prefHeight="26.0" prefWidth="228.0" text="Ср. сигнал при 30 С (мВ)" GridPane.rowIndex="2">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label fx:id="lab_sred30" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label prefHeight="18.0" prefWidth="154.0" text="Ср. ЭШРТ по ФПУ (мК)" GridPane.rowIndex="4">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label fx:id="lab_NETD" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="--" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Label fx:id="lab_NEDTSootv" alignment="CENTER" contentDisplay="CENTER" layoutX="215.0" layoutY="20.0" prefHeight="39.0" prefWidth="115.0" text="---" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <Label layoutX="10.0" layoutY="50.0" prefHeight="30.0" prefWidth="223.0" text="Ср. сигнал при 40 С (мВ)" GridPane.rowIndex="3">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label fx:id="lab_sred40" alignment="CENTER" layoutX="146.0" layoutY="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label layoutX="10.0" layoutY="105.0" prefHeight="18.0" prefWidth="215.0" text="Кол. деселектир. элем. по ФПУ" GridPane.rowIndex="5">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label layoutX="10.0" layoutY="133.0" prefHeight="37.0" prefWidth="195.0" text="Макс. кол. десел. элем. в одном канале" wrapText="true" GridPane.rowIndex="6">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin></Label>
+                                    <Label fx:id="lab_countDeselPixel" alignment="CENTER" layoutX="146.0" layoutY="105.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label fx:id="lab_countDeselPixelInLine" alignment="CENTER" layoutX="146.0" layoutY="133.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Label fx:id="lab_countDeselPixel_sootv" alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="100.0" prefHeight="39.0" prefWidth="115.0" text="---" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <Label fx:id="lab_countDeselPixelInLine_sootv" alignment="CENTER" contentDisplay="CENTER" layoutX="220.0" layoutY="128.0" prefHeight="39.0" prefWidth="115.0" text="---" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                    <Label fx:id="lab_deltaSign" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="10.0" layoutX="280.0" layoutY="93.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Дельта сигнала" textAlignment="CENTER" textOverrun="LEADING_ELLIPSIS" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="10.0" />
+                                       </font>
+                                       <opaqueInsets>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </opaqueInsets>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                              <Label layoutX="1304.0" layoutY="164.0" prefHeight="17.0" prefWidth="23.0" text="по" />
+                              <ProgressBar fx:id="pb_exp" layoutX="1430.0" layoutY="383.0" prefHeight="18.0" prefWidth="158.0" progress="0.0" />
+                              <Separator layoutX="1423.0" layoutY="235.0" prefHeight="0.0" prefWidth="167.0" />
+                              <Separator layoutX="1421.0" layoutY="532.0" prefHeight="0.0" prefWidth="171.0" />
+                              <HBox fx:id="vb_temp" layoutX="1416.0" layoutY="14.0" prefHeight="215.0" prefWidth="125.0" />
+                              <VBox fx:id="vb_netdALL" layoutX="520.0" layoutY="472.0" prefHeight="297.0" prefWidth="549.0" />
+                              <Button fx:id="but_start_Shum" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" layoutX="1429.0" layoutY="285.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="159.0" style="-fx-background-color: #FFD700;" text="1. Накопление при 30">
+                                 <font>
+                                    <Font name="System Bold Italic" size="11.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="but_start_NEDT" alignment="CENTER" contentDisplay="CENTER" layoutX="1427.0" layoutY="416.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="159.0" style="-fx-background-color: #FFD700;" text="3.  Итоговый расчет">
+                                 <font>
+                                    <Font name="System Bold Italic" size="11.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="but_start_RESET" alignment="CENTER" contentDisplay="CENTER" layoutX="1429.0" layoutY="474.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="159.0" style="-fx-background-color: #c68305;" text="Сброс" textFill="#030303">
+                                 <font>
+                                    <Font name="System Bold Italic" size="12.0" />
+                                 </font>
+                              </Button>
+                           </children></AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab text="Загрузка из БД">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                  </Tab>
+                  <Tab text="Настройка стенда">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <GridPane layoutX="533.0" layoutY="304.0" prefHeight="836.0" prefWidth="1590.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Настройка платы" GridPane.halignment="CENTER" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="366.0" layoutY="420.0" text="Настройка файлов шаблона и настроек" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="360.0" layoutY="141.0" text="Настройка базы данных" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="Настройка данных прибора" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </children></AnchorPane>
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+         </center>
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <bottom>
+            <GridPane BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="9.0" prefWidth="67.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="0.0" prefWidth="119.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1307.0" minWidth="0.0" prefWidth="70.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1237.0" minWidth="10.0" prefWidth="54.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1237.0" minWidth="10.0" prefWidth="97.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1237.0" minWidth="10.0" prefWidth="77.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1025.0" minWidth="10.0" prefWidth="95.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="1025.0" minWidth="10.0" prefWidth="230.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1025.0" minWidth="10.0" prefWidth="787.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Оператор:" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label fx:id="lab_fio" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="17.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="30.0" prefWidth="66.0" text="Иванов И.И." textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="17.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Изделие:" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="282.0" layoutY="17.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Зав. номера:" textAlignment="CENTER" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label fx:id="lab_izd" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="ДТ2-1" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label fx:id="lab_number" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="001/001" textAlignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ProgressBar fx:id="pBar_sendQueue" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="6">
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </GridPane.margin>
+                  </ProgressBar>
+                  <Label fx:id="lab_sendQueue" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" text="Есть очередь на отправку" GridPane.columnIndex="7">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label fx:id="lab_exp_status" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="156.0" text="Нет данных по эксперименту ..." GridPane.columnIndex="8">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+         </bottom>
+      </BorderPane>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</AnchorPane>
