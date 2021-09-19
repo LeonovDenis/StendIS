@@ -20,9 +20,11 @@ import ru.pelengator.model.Frame;
 import ru.pelengator.utils.StatisticsUtils;
 
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Date;
+
 
 import static ru.pelengator.PropFile.*;
 import static ru.pelengator.utils.Utils.toArrayList;
@@ -62,7 +64,8 @@ public class ExpService40 extends Service<Void> {
             protected Void call() throws Exception {
                 currentExp = detectorViewModel.getExperiment();
                 if (currentExp == null) {
-                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
+                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
+                            detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));
                 }
                 updateMessage("Старт Сервиса расчета 40 градусов");
                 updateProgress(0.0, 1);
@@ -275,7 +278,7 @@ public class ExpService40 extends Service<Void> {
         currentExp.setDataArraySred_40(dataArraySred_40);
         currentExp.setSredZnach40(sredZnach40);
         currentExp.setFrameArrayList40(toArrayList(frameArrayList));
-        currentExp.setEndExpDate(new Date(System.currentTimeMillis()));
+        currentExp.setEndExpDate(new Timestamp(System.currentTimeMillis()));
         detectorViewModel.setExperiment(currentExp);
     }
 

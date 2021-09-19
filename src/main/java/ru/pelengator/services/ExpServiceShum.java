@@ -20,9 +20,9 @@ import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.utils.StatisticsUtils;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Date;
 
 import static ru.pelengator.PropFile.*;
 import static ru.pelengator.utils.Utils.toArrayList;
@@ -68,7 +68,8 @@ public class ExpServiceShum extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 //создаем эксперимент
-                currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(), detectorViewModel.getTesterFIO(), new Date(System.currentTimeMillis()));
+                currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
+                        detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));
                 updateMessage("Старт Сервиса расчета шума");
                 updateProgress(0.0, 1);
                 updateMessage("Сброс переменных");

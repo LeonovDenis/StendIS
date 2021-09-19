@@ -1,9 +1,8 @@
 package ru.pelengator.model;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 import static ru.pelengator.PropFile.MASHTAB;
 import static ru.pelengator.utils.Utils.arraylistToString;
@@ -25,9 +24,9 @@ public class Experiment {
     //данные по эксперименту
 
 
-    private Date startExpDate;
+    private Timestamp startExpDate;
 
-    private Date endExpDate;
+    private Timestamp endExpDate;
     //данные по пикселям
 
     private int countDeselPixel;
@@ -104,7 +103,7 @@ public class Experiment {
      * @param testerName
      * @param startExpDate
      */
-    public Experiment(String detectorName, String detectorSerial, String testerName, Date startExpDate) {
+    public Experiment(String detectorName, String detectorSerial, String testerName, Timestamp startExpDate) {
         this.detectorName = detectorName;
         this.detectorSerial = detectorSerial;
         this.testerName = testerName;
@@ -136,19 +135,19 @@ public class Experiment {
         this.testerName = testerName;
     }
 
-    public Date getStartExpDate() {
+    public Timestamp getStartExpDate() {
         return startExpDate;
     }
 
-    public void setStartExpDate(Date startExpDate) {
+    public void setStartExpDate(Timestamp startExpDate) {
         this.startExpDate = startExpDate;
     }
 
-    public Date getEndExpDate() {
+    public Timestamp getEndExpDate() {
         return endExpDate;
     }
 
-    public void setEndExpDate(Date endExpDate) {
+    public void setEndExpDate(Timestamp endExpDate) {
         this.endExpDate = endExpDate;
     }
 

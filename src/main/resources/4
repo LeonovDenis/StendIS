@@ -1,6 +1,6 @@
 CREATE TABLE exp
 (
-    ID                    BIGINT AUTO_INCREMENT NOT NULL,
+    ID                    BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     detectorName          VARCHAR(255)          NULL,
     detectorSerial        VARCHAR(255)          NULL,
     testerName            VARCHAR(255)          NULL,
@@ -18,14 +18,13 @@ CREATE TABLE exp
     vuc                   INT                   NULL,
     tInt                  INT                   NULL,
     temp                  INT                   NULL,
-    mode                  VARCHAR(255)          NULL,
+    modde                 VARCHAR(255)          NULL,
     dir                   VARCHAR(255)          NULL,
     ccc                   VARCHAR(255)          NULL,
-    frameArrayList30      VARCHAR(255)          NULL,
-    frameArrayList40      VARCHAR(255)          NULL,
+    frameArrayList30      LONGTEXT              NULL,
+    frameArrayList40      LONGTEXT              NULL,
     shum                  DOUBLE                NULL,
     sredZnach30           DOUBLE                NULL,
     sredZnach40           DOUBLE                NULL,
-    NEDT                  DOUBLE                NULL,
-    CONSTRAINT pk_exp PRIMARY KEY (ID)
+    NEDT                  DOUBLE                NULL
 );

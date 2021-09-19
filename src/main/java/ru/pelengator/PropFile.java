@@ -52,6 +52,11 @@ public class PropFile {
     public static int LINENUMBER;
     //наименование детектора
     public static String DETECTORNAME;
+    public static String JDBC_DRIVER;
+    public static String DB_URL;
+    public static String TAB_NAME;
+    public static String USER;
+    public static String PASS;
 
     //загрузка ресурсов
     static {
@@ -83,6 +88,12 @@ public class PropFile {
             String str_RESDESEL = appProps.getProperty("msg.RESDESEL");
             String str_RANGE = appProps.getProperty("dev.RANGE");
             String str_ACPNUMBER = appProps.getProperty("dev.ACPNUMBER");
+
+            JDBC_DRIVER = appProps.getProperty("bd.JDBC_DRIVER");
+            DB_URL = appProps.getProperty("bd.DB_URL");
+            USER = appProps.getProperty("bd.USER");
+            PASS = appProps.getProperty("bd.PASS");
+            TAB_NAME = appProps.getProperty("bd.TAB_NAME");
             /////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////
             LINENUMBER = Integer.parseInt(str_LINENUMBER);
@@ -114,7 +125,7 @@ public class PropFile {
             MASHTAB = (RANGE / (float) (Math.pow(2, ACPNUMBER)));
             /////////////////////////////////////////////////////////////////////////////////////
         } catch (
-            IOException e) {
+                IOException e) {
             System.out.println("Не загрузились настройки");
             e.printStackTrace();
         }
