@@ -6,6 +6,7 @@ import java.util.Map;
 
 import static ru.pelengator.PropFile.MASHTAB;
 import static ru.pelengator.utils.Utils.arraylistToString;
+import static ru.pelengator.utils.Utils.stringToArrayList;
 
 /**
  * Объект эксперимента
@@ -22,7 +23,6 @@ public class Experiment {
 
     private String testerName;
     //данные по эксперименту
-
 
     private Timestamp startExpDate;
 
@@ -95,6 +95,12 @@ public class Experiment {
     private double NEDT;// итоговое значение НЕДТ
 
     private byte[] matrix;//массив деселекции
+
+    /**
+     * Конструктор для БД
+     */
+    public Experiment() {
+    }
 
     /**
      * Конструктор
@@ -399,6 +405,7 @@ public class Experiment {
 
     public void setFrameList30(String frameList30) {
         this.frameList30 = frameList30;
+        this.frameArrayList30=stringToArrayList(frameList30);
     }
 
     public String getFrameList40() {
@@ -407,6 +414,7 @@ public class Experiment {
 
     public void setFrameList40(String frameList40) {
         this.frameList40 = frameList40;
+        this.frameArrayList40=stringToArrayList(frameList40);
     }
 
     @Override

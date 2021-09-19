@@ -2,15 +2,20 @@ package ru.pelengator.utils;
 
 import at.favre.lib.bytes.Bytes;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.model.Frame;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class Utils {
     /**
@@ -125,10 +130,24 @@ public class Utils {
      */
     public static <T> String arraylistToString(ArrayList<T> arrayList) {
         Gson gson = new Gson();
-        StringBuilder sb = new StringBuilder();
-        for (T obj : arrayList) {
-            sb.append(gson.toJson(obj));
-        }
-        return sb.toString();
+        Collection collection = new ArrayList(arrayList);
+        String json = gson.toJson(collection);
+        return json;
     }
+
+    public static ArrayList<Frame> stringToArrayList(String array) {
+        if(array==null){
+            return null;
+        }
+        JsonArray jarray = JsonParser.parseString(array).getAsJsonArray();
+        ArrayList<Frame> frameArrayList = new ArrayList<>();
+        Gson gson = new Gson();
+        for (int i = 0; i <jarray.size() ; i++) {
+            Frame frame = gson.fromJson(jarray.get(2), Frame.class);
+            frameArrayList.add(frame);
+        }
+        return frameArrayList;
+    }
+
+
 }

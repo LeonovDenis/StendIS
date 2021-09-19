@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.dao.BDService.TypeColums.type_ID;
 
 public class DetectorViewModel {
 
@@ -926,7 +927,8 @@ public class DetectorViewModel {
         experiment.setFrameArrayList30(frames);
         BDService bDsaveData = new BDService();
         bDsaveData.saveExpDataToBD(experiment);
-        bDsaveData.readExpFromBD(2);
+        ArrayList<Experiment> experiments = bDsaveData.readExpFromBD(type_ID, 8);
+        System.out.println(experiments);
     }
 
     //стандартный запуск расчета эксперимента
