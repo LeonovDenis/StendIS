@@ -1,12 +1,9 @@
 package ru.pelengator.model;
 
-
-import javafx.collections.ObservableList;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import static ru.pelengator.PropFile.MASHTAB;
 import static ru.pelengator.utils.Utils.arraylistToString;
@@ -14,95 +11,91 @@ import static ru.pelengator.utils.Utils.arraylistToString;
 /**
  * Объект эксперимента
  */
-@Entity
-@Table (name = "exp")
+
 public class Experiment {
     //данные по детектору
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long ID;
-    @Column(name = "detectorName")
+
     private String detectorName;
-    @Column(name = "detectorSerial")
+
     private String detectorSerial;
-    @Column(name = "testerName")
+
     private String testerName;
     //данные по эксперименту
-    @Column(name = "startExpDate")
+
+
     private Date startExpDate;
-    @Column(name = "endExpDate")
+
     private Date endExpDate;
     //данные по пикселям
-    @Column(name = "countDeselPixel")
+
     private int countDeselPixel;
-    @Column(name = "countDeselPixelInLine")
+
     private int countDeselPixelInLine;
     /////////////параметры стенда////
-    @Column(name = "brakTimes")
+
     private double brakTimes;// параметр брака по шуму/разы
-    @Column(name = "brakFPUCount")
+
     private double   brakFPUCount;//паракметр брака по НЕДТ ФПУ/вольты
-    @Column(name = "brakCHannelCount")
+
     private double  brakCHannelCount; //параметр брака по НЕДТ по каналу/вольты
     ////////////////////////////////////////////////
     // параметры стенда
-    @Column(name = "mashtab")
+
     private double mashtab;//маштаб, В/отсчет
-    @Column(name = "vr0")
+
     private int vr0;//напряжение смещения, мВ
-    @Column(name = "vva")
+
     private int vva;//напряжение антиблюма, мВ
-    @Column(name = "vu4")
+
     private int vu4;//напряжение на ёмкости 4, мВ
-    @Column(name = "vuc")
+
     private int vuc;//напряжение на ёмкостях 1-3, мВ
-    @Column(name = "tInt")
+
     private int tInt;//время интегрирования, мкс
-    @Column(name = "temp")
+
     private int temp;//напряжение на термодатчике, мВ
-    @Column(name = "mode")
+
     private String mode;//режим работы
-    @Column(name = "dir")
+
     private String dir;//направление сканирования
-    @Column(name = "ccc")
+
     private String ccc;//ёмкость
 
     ////////////////////////////////
-    @Transient
-    private ArrayList<Frame> frameArrayList30;//массив кадров при 30/отсчеты
-    @Column(name = "frameArrayList30")
-    private String frameList30;//текстовое представление frameArrayList30 для БД
-    @Transient
-    private ArrayList<Frame> frameArrayList40;//массив кадров при 40/отсчеты
-    @Column(name = "frameArrayList40")
-    private String frameList40;//текстовое представление frameArrayList40 для БД
-    @Transient
-    private int[][] dataArray30;//массив данных при 30
-    @Transient
-    private int[][] dataArray40;//массив данных при 40
-    @Transient
-    private Map<String,Number> raspredMap;//карта распределения НЕДТ
-    @Transient
-    private double[] dataArraySred_30;//средний сигнал по каналам при 30
-    @Transient
-    private double [] dataArraySred_40;//средний сигнал по каналам при 40
-    @Transient
-    private static double[] dataArraySKO30; // СКО , шум при 30
-    @Column(name = "shum")
-    private double shum; //средний шум по ФПУ//отсчеты
-    @Column(name = "sredZnach30")
-    private double sredZnach30;//среднее значение сигнала ФПУ при 30
-    @Column(name = "sredZnach40")
-    private double sredZnach40;//среднее значение сигнала ФПУ при 40
-    @Transient
-    private double[] dataArrayNEDT;//массив НЕДТ
-    @Column(name = "NEDT")
-    private double NEDT;// итоговое значение НЕДТ
-    @Transient
-    private byte[] matrix;//массив деселекции
 
-    public Experiment() {
-    }
+    private ArrayList<Frame> frameArrayList30;//массив кадров при 30/отсчеты
+
+    private String frameList30;//текстовое представление frameArrayList30 для БД
+
+    private ArrayList<Frame> frameArrayList40;//массив кадров при 40/отсчеты
+
+    private String frameList40;//текстовое представление frameArrayList40 для БД
+
+    private int[][] dataArray30;//массив данных при 30
+
+    private int[][] dataArray40;//массив данных при 40
+
+    private Map<String,Number> raspredMap;//карта распределения НЕДТ
+
+    private double[] dataArraySred_30;//средний сигнал по каналам при 30
+
+    private double [] dataArraySred_40;//средний сигнал по каналам при 40
+
+    private static double[] dataArraySKO30; // СКО , шум при 30
+
+    private double shum; //средний шум по ФПУ//отсчеты
+
+    private double sredZnach30;//среднее значение сигнала ФПУ при 30
+
+    private double sredZnach40;//среднее значение сигнала ФПУ при 40
+
+    private double[] dataArrayNEDT;//массив НЕДТ
+
+    private double NEDT;// итоговое значение НЕДТ
+
+    private byte[] matrix;//массив деселекции
 
     /**
      * Конструктор
@@ -415,5 +408,46 @@ public class Experiment {
 
     public void setFrameList40(String frameList40) {
         this.frameList40 = frameList40;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "ID = " + ID + ", " +
+                "detectorName = " + detectorName + ", " +
+                "detectorSerial = " + detectorSerial + ", " +
+                "testerName = " + testerName + ", " +
+                "startExpDate = " + startExpDate + ", " +
+                "endExpDate = " + endExpDate + ", " +
+                "countDeselPixel = " + countDeselPixel + ", " +
+                "countDeselPixelInLine = " + countDeselPixelInLine + ", " +
+                "brakTimes = " + brakTimes + ", " +
+                "brakFPUCount = " + brakFPUCount + ", " +
+                "brakCHannelCount = " + brakCHannelCount + ", " +
+                "mashtab = " + mashtab + ", " +
+                "vr0 = " + vr0 + ", " +
+                "vva = " + vva + ", " +
+                "vu4 = " + vu4 + ", " +
+                "vuc = " + vuc + ", " +
+                "tInt = " + tInt + ", " +
+                "temp = " + temp + ", " +
+                "mode = " + mode + ", " +
+                "dir = " + dir + ", " +
+                "ccc = " + ccc + ", " +
+                "frameArrayList30 = " + frameArrayList30 + ", " +
+                "frameList30 = " + frameList30 + ", " +
+                "frameArrayList40 = " + frameArrayList40 + ", " +
+                "frameList40 = " + frameList40 + ", " +
+                "dataArray30 = " + dataArray30 + ", " +
+                "dataArray40 = " + dataArray40 + ", " +
+                "raspredMap = " + raspredMap + ", " +
+                "dataArraySred_30 = " + dataArraySred_30 + ", " +
+                "dataArraySred_40 = " + dataArraySred_40 + ", " +
+                "shum = " + shum + ", " +
+                "sredZnach30 = " + sredZnach30 + ", " +
+                "sredZnach40 = " + sredZnach40 + ", " +
+                "dataArrayNEDT = " + dataArrayNEDT + ", " +
+                "NEDT = " + NEDT + ", " +
+                "matrix = " + matrix + ")";
     }
 }

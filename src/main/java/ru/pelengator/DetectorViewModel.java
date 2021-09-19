@@ -10,16 +10,20 @@ import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
+import ru.pelengator.dao.BDreadData;
+import ru.pelengator.dao.BDsaveData;
 import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.utils.Utils.arraylistToString;
 
 public class DetectorViewModel {
 
@@ -912,7 +916,17 @@ public class DetectorViewModel {
 
     //В работе
     public void manual() {
+        Frame frame = new Frame();
+        frame.setData(new int[]{2,1,2,1});
+        ArrayList<Frame> frames = new ArrayList<>();
+        frames.add(frame);
+        frames.add(frame);
+        frames.add(frame);
+        String s = arraylistToString(frames);
+        BDsaveData bDsaveData = new BDsaveData();
+        bDsaveData.saveDataBD(2,s);
 
+        new BDreadData().readDataBD(3);
     }
 
     //стандартный запуск расчета эксперимента
