@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javafx.application.Platform;
@@ -124,6 +126,9 @@ public class SecondaryController {
     public
     Label lab_sendQueue;
     ////////////////////////////////////////////////////////////////////////////
+    @FXML
+    public
+    TextField tf_IDexp;
     @FXML
     public
     GridPane gp_text;
@@ -317,6 +322,10 @@ public class SecondaryController {
     // кнопка сохранения данных эксперимента
     @FXML
     Button but_saveFileExp;
+    @FXML
+    Button but_updateFileExp;
+    @FXML
+    Button but_loadFileExp;
     @FXML
     ToggleButton tBut_OUT1;
     @FXML
@@ -958,7 +967,30 @@ public class SecondaryController {
         });
         //обработка кнопки сохранения файла эксперимента
         but_saveFileExp.setOnAction(event -> {
-            detectorViewModel.saveFileExp();
+            boolean res = detectorViewModel.saveFileExp();
+            checkBT(res, but_saveFileExp, "Сохранено", "Ошибка БД");
+        });
+        but_updateFileExp.setOnAction(event -> {
+            boolean res = detectorViewModel.updateFileExp();
+            checkBT(res, but_updateFileExp, "Обновлено", "Ошибка БД");
+        });
+        but_loadFileExp.setOnAction(event -> {
+            String text;
+            if (tf_IDexp.getText() != null||!tf_IDexp.getText().isEmpty()) {
+                text = tf_IDexp.getText().trim();
+            } else {
+                checkBT(false, but_loadFileExp, "", "Укажите ID");
+                return;
+            }
+            long l = 0;
+            try {
+                l = Long.parseLong(text);
+            } catch (NumberFormatException e) {
+                checkBT(false, but_loadFileExp, "", "Укажите ID");
+                return;
+            }
+            boolean res = detectorViewModel.loadFileExp(l);
+            checkBT(res, but_loadFileExp, "Загружено", "Ошибка БД");
         });
         //обработка кнопки включения
         but_powerOn.setOnAction(event -> {
@@ -968,6 +1000,38 @@ public class SecondaryController {
         but_powerOff.setOnAction(event -> {
             detectorViewModel.powerOff(but_powerOn, but_powerOff);
         });
+    }
+
+    /**
+     * Обработка  надписей кнопок
+     *
+     * @param res     случай
+     * @param but     кнопка
+     * @param goodTXT при tru
+     * @param badTXT  при false
+     */
+    private void checkBT(boolean res, Button but, String goodTXT, String badTXT) {
+        String text = but.getText();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    but.setText(text);
+                });
+            }
+        }, 1000);
+
+        Platform.runLater(() -> {
+            if (res) {
+                but.setText(goodTXT);
+            } else {
+                but.setText(badTXT);
+            }
+            timer.purge();
+        });
+
+
     }
 
     //отработка корректности слайдеров
@@ -1544,6 +1608,7 @@ public class SecondaryController {
         nm.getChildren().add(lineChart);
         return lineChart;
     }
+
     @FXML
     /**
      * Отработка вывода выбранных каналов в главном графике
@@ -1573,6 +1638,7 @@ public class SecondaryController {
         }
         detectorViewModel.getMain_chart_service().setOutMode(bytte);
     }
+
     public BarChart<String, Number> getBarChart_Exist() {
         return barChart_Exist;
     }

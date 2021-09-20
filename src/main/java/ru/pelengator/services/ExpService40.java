@@ -63,10 +63,6 @@ public class ExpService40 extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 currentExp = detectorViewModel.getExperiment();
-                if (currentExp == null) {
-                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
-                            detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));
-                }
                 updateMessage("Старт Сервиса расчета 40 градусов");
                 updateProgress(0.0, 1);
                 ///инициализация данных эксперимента
@@ -74,16 +70,27 @@ public class ExpService40 extends Service<Void> {
                 initParams();
                 updateMessage("Задание на выборку: " + frame_number + " значений. Каналы: [" + start_ch + "|" + stop_ch + "]");
                 //набор массива кадров
-                while (frameArrayList.size() < frame_number) {
-                    Frame cloneFrame = DetectorViewModel.getMyFrame().clone();//клонируем кадр
-                    if (lasID == cloneFrame.getId() || cloneFrame.getData() == null) {
-                        continue;
-                    } else {
-                        frameArrayList.add(cloneFrame);
-                        lasID = cloneFrame.getId();
+                if (detectorViewModel.isRELOADCHARTS()) {//в случае загрузки из БД
+                    if (currentExp.getFrameArrayList40() == null) {
+                        updateMessage("Нет кадров в БД");
+                        updateProgress(1, 1);
+                        return null;
                     }
-                    updateMessage("Жду...набор кадров " + "[" + frameArrayList.size() + "/" + frame_number + "]");
-                    updateProgress(0.9D * frameArrayList.size() / (double) frame_number, 1.0);
+                    frameArrayList = FXCollections.observableArrayList(currentExp.getFrameArrayList40());
+                    updateMessage("Кадры набраны из БД");
+                    updateProgress(0.9D, 1);
+                } else {//В случае эксперимента
+                    while (frameArrayList.size() < frame_number) {
+                        Frame cloneFrame = DetectorViewModel.getMyFrame().clone();//клонируем кадр
+                        if (lasID == cloneFrame.getId() || cloneFrame.getData() == null) {
+                            continue;
+                        } else {
+                            frameArrayList.add(cloneFrame);
+                            lasID = cloneFrame.getId();
+                        }
+                        updateMessage("Жду...набор кадров " + "[" + frameArrayList.size() + "/" + frame_number + "]");
+                        updateProgress(0.9D * frameArrayList.size() / (double) frame_number, 1.0);
+                    }
                 }
                 updateMessage("Набрал кадры...." + frameArrayList.size() + " кадров");
                 //набираем массив данных

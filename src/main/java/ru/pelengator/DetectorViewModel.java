@@ -17,7 +17,6 @@ import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
 
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +28,8 @@ public class DetectorViewModel {
 
     //флаг отправки деселекции
     private static boolean SENDDESEL = true;
+    //Flag перегрузки графиков
+    private static boolean RELOADCHARTS = false;
     private static Thread scenario = new Thread();
 
     //флаг темнового графика. Для отобр кнопок
@@ -133,7 +134,7 @@ public class DetectorViewModel {
     private ExpReset exp_Reset;
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Experiment experiment;//ссылка на текущий эксперимент
+    private static Experiment experiment = new Experiment();//ссылка на текущий эксперимент
 
     /**
      * Инициализация
@@ -916,19 +917,7 @@ public class DetectorViewModel {
 
     //В работе
     public void manual() {
-        Frame frame = new Frame();
-        frame.setData(new int[]{2,1,2,1});
-        ArrayList<Frame> frames = new ArrayList<>();
-        frames.add(frame);
-        frames.add(frame);
-        frames.add(frame);
-        Experiment experiment = new Experiment(this.getDetectorName(), this.getNumbersDevises(), this.getTesterFIO(),
-                new Timestamp(System.currentTimeMillis()));
-        experiment.setFrameArrayList30(frames);
-        BDService bDsaveData = new BDService();
-        bDsaveData.saveExpDataToBD(experiment);
-        ArrayList<Experiment> experiments = bDsaveData.readExpFromBD(type_ID, 8);
-        System.out.println(experiments);
+
     }
 
     //стандартный запуск расчета эксперимента
@@ -955,8 +944,60 @@ public class DetectorViewModel {
     }
 
     //обработка кнопки сохранения файла эксперимента
-    public void saveFileExp() {
+    public boolean saveFileExp() {
+        BDService bDsaveData = new BDService();
+        boolean res = bDsaveData.saveExpDataToBD(getExperiment());
+        return res;
+    }
 
+    //обработка кнопки обновления файла эксперимента
+    public boolean updateFileExp() {
+        BDService bDsaveData = new BDService();
+        long ID = getExperiment().getID();
+        if (ID == 0) {
+            return false;
+        }
+        boolean res = bDsaveData.updateExpFromBD(type_ID, ID, getExperiment());
+        return res;
+    }
+
+    //обработка кнопки загрузки файла эксперимента
+    public boolean loadFileExp(long ID) {
+        BDService bDsaveData = new BDService();
+        long l = bDsaveData.takeLastIDFromBD();
+        if (ID > l) {
+            return false;
+        } else {
+            ArrayList<Experiment> experiments = bDsaveData.readExpFromBD(type_ID, ID);
+            if (experiments.size() == 0) {
+                return false;
+            } else {
+                setExperiment(experiments.get(0));
+                refrashCharts();
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Обновление графиков при загрузке из БД
+     */
+    private void refrashCharts() {
+        Thread thread = new Thread(() -> {
+            setRELOADCHARTS(true);
+            try {
+                Platform.runLater(() -> controller.getBut_start_Shum().fire());
+                TimeUnit.MILLISECONDS.sleep(1000);
+                Platform.runLater(() -> controller.getBut_start_40().fire());
+                TimeUnit.MILLISECONDS.sleep(1000);
+                Platform.runLater(() -> controller.getBut_start_NEDT().fire());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            setRELOADCHARTS(false);
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     // остановка главных графиков
@@ -1536,4 +1577,11 @@ public class DetectorViewModel {
         return controller;
     }
 
+    public static boolean isRELOADCHARTS() {
+        return RELOADCHARTS;
+    }
+
+    public static void setRELOADCHARTS(boolean RELOADCHARTS) {
+        DetectorViewModel.RELOADCHARTS = RELOADCHARTS;
+    }
 }

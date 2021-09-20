@@ -80,16 +80,27 @@ public class ExpServiceShum extends Service<Void> {
                 initParams();
                 updateMessage("Задание на выборку: " + frame_number + " значений. Каналы: [" + start_ch + "|" + stop_ch + "]");
                 //набор массива кадров
-                while (frameArrayList.size() < frame_number) {
-                    Frame cloneFrame = DetectorViewModel.getMyFrame().clone();//клонируем кадр
-                    if (lasID == cloneFrame.getId() || cloneFrame.getData() == null) {
-                        continue;
-                    } else {
-                        frameArrayList.add(cloneFrame);
-                        lasID = cloneFrame.getId();
+                if (detectorViewModel.isRELOADCHARTS()) {//в случае загрузки из БД
+                    if (currentExp.getFrameArrayList30() == null) {
+                        updateMessage("Нет кадров в БД");
+                        updateProgress(1, 1);
+                        return null;
                     }
-                    updateMessage("Жду...набор кадров " + "[" + frameArrayList.size() + "/" + frame_number + "]");
-                    updateProgress(0.9D * frameArrayList.size() / (double) frame_number, 1);
+                    frameArrayList = FXCollections.observableArrayList(currentExp.getFrameArrayList30());
+                    updateMessage("Кадры набраны из БД");
+                    updateProgress(0.9D, 1);
+                } else {//В случае эксперимента
+                    while (frameArrayList.size() < frame_number) {
+                        Frame cloneFrame = DetectorViewModel.getMyFrame().clone();//клонируем кадр
+                        if (lasID == cloneFrame.getId() || cloneFrame.getData() == null) {
+                            continue;
+                        } else {
+                            frameArrayList.add(cloneFrame);
+                            lasID = cloneFrame.getId();
+                        }
+                        updateMessage("Жду...набор кадров " + "[" + frameArrayList.size() + "/" + frame_number + "]");
+                        updateProgress(0.9D * frameArrayList.size() / (double) frame_number, 1);
+                    }
                 }
                 updateMessage("Набрал кадры...." + frameArrayList.size() + " кадров");
                 //набираем массив данных

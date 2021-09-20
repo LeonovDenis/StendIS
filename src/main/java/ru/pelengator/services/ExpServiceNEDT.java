@@ -86,6 +86,12 @@ public class ExpServiceNEDT extends Service<Void> {
                 updateMessage("Инициализация данных");
                 initParams();
                 updateProgress(0.2, 1);
+                //проверка наличия данных
+                if (dataArraySred_30==null||dataArraySred_40==null){
+                    updateMessage("Выход .... нет данных");
+                    updateProgress(1, 1);
+                    return null;
+                }
                 //расчет недт
                 FINAL_NEDT = calculateNEDT(dataArraySred_30, dataArraySred_40, dataArraySKO30);
                 updateMessage("Рассчитал NEDT ....");

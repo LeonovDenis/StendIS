@@ -1,0 +1,26 @@
+CREATE DATABASE data;
+create table exp
+(
+    ID               bigint auto_increment
+        primary key,
+    detectorID       varchar(255) null,
+    testerName       varchar(255) null,
+    startExpDate     timestamp(3) null,
+    endExpDate       timestamp(3) null,
+    topology         tinyblob     null,
+    vr0              int          null,
+    vva              int          null,
+    vu4              int          null,
+    vuc              int          null,
+    tInt             int          null,
+    temp             int          null,
+    modde            varchar(255) null,
+    dir              varchar(255) null,
+    ccc              varchar(255) null,
+    frameArrayList30 longtext     null,
+    frameArrayList40 longtext     null,
+    shum             double       null,
+    sredZnach30      double       null,
+    sredZnach40      double       null,
+    NEDT             double       null
+);

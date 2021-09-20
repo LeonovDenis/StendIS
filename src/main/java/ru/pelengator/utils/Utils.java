@@ -136,7 +136,7 @@ public class Utils {
     }
 
     public static ArrayList<Frame> stringToArrayList(String array) {
-        if(array==null){
+        if(array==null||array.isEmpty()||array.equalsIgnoreCase("NULL")){
             return null;
         }
         JsonArray jarray = JsonParser.parseString(array).getAsJsonArray();

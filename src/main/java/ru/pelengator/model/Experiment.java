@@ -100,6 +100,28 @@ public class Experiment {
      * Конструктор для БД
      */
     public Experiment() {
+        this.ID = 0L;
+        this.detectorName = "NULL";
+        this.detectorSerial = "NULL";
+        this.testerName = "NULL";
+        this.startExpDate = new Timestamp(System.currentTimeMillis());
+        this.endExpDate = new Timestamp(System.currentTimeMillis());
+        this.vr0 = 0;
+        this.vva = 0;
+        this.vu4 = 0;
+        this.vuc = 0;
+        this.tInt = 0;
+        this.temp = 0;
+        this.mode = "NULL";
+        this.dir = "NULL";
+        this.ccc = "NULL";
+        this.frameList30 = "NULL";
+        this.frameList40 = "NULL";
+        this.shum = 0D;
+        this.sredZnach30 = 0D;
+        this.sredZnach40 = 0D;
+        this.NEDT = 0D;
+        this.matrix = new byte[]{0,1,1,0};
     }
 
     /**

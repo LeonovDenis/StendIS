@@ -2,7 +2,7 @@
   <configuration default="false" name="App" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="ru.pelengator.App" />
     <module name="StendIS" />
-    <option name="VM_PARAMETERS" value="--module-path &quot;F:\myFX\openjfx-16_windows-x64_bin-sdk\javafx-sdk-16\lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml" />
+    <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Amazon Corretto\javafx-sdk-16\lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="ru.pelengator.*" />

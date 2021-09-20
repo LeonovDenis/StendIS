@@ -672,7 +672,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="but_saveFileExp" layoutX="1436.0" layoutY="575.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Сохранить файл" />
+                              <Button fx:id="but_saveFileExp" layoutX="1436.0" layoutY="575.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Сохранить в БД" />
                               <TextField fx:id="tex_count" alignment="CENTER" layoutX="1220.0" layoutY="103.0" prefHeight="25.0" prefWidth="51.0" promptText="1024" text="128" />
                               <VBox fx:id="vb_sko30" layoutX="10.0" layoutY="106.0" prefHeight="293.0" prefWidth="506.0" />
                               <Label alignment="CENTER" layoutX="30.0" layoutY="441.0" prefHeight="33.0" prefWidth="466.0" text="ЭШРТ (мК)" textAlignment="CENTER">
@@ -698,7 +698,7 @@
                                  </font>
                               </Label>
                               <Label layoutX="1186.0" layoutY="164.0" prefHeight="17.0" prefWidth="20.0" text="С" />
-                              <Button fx:id="but_saveFileExp1" layoutX="1436.0" layoutY="630.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Печать отчета" />
+                              <Button fx:id="but_updateFileExp" layoutX="1436.0" layoutY="630.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Обновить  в БД" />
                               <Label layoutX="1137.0" layoutY="202.0" prefHeight="41.0" prefWidth="227.0" text="Браковочные параметры">
                                  <font>
                                     <Font name="System Bold Italic" size="14.0" />
@@ -828,6 +828,8 @@
                                     <Font name="System Bold Italic" size="12.0" />
                                  </font>
                               </Button>
+                              <Button fx:id="but_loadFileExp" layoutX="1436.0" layoutY="681.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Загрузить из БД" />
+                              <TextField fx:id="tf_IDexp" alignment="CENTER_RIGHT" layoutX="1506.0" layoutY="735.0" prefHeight="25.0" prefWidth="71.0" promptText="ID" />
                            </children></AnchorPane>
                   </content>
                 </Tab>
