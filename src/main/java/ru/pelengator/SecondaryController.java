@@ -252,6 +252,11 @@ public class SecondaryController {
     @FXML
     public
     ImageView ap_dbConnect;
+    @FXML
+    public
+    Button bt_saveOtchet;
+
+
     /**
      * Ссылка на вьюмодел
      */
@@ -800,6 +805,11 @@ public class SecondaryController {
 
     //обработчик нажатий кнопок
     private void initButtons() {
+        //обработка сохранения отчета
+        bt_saveOtchet.setOnAction(event -> {
+           boolean res=detectorViewModel.savePDF();
+            checkBT(res, bt_saveOtchet, "Сохранено", "Ошибка");
+        });
         //обработка включения всех пикселей
         but_setAllPixel.setOnAction(event -> {
             detectorViewModel.setAllPixel();
@@ -810,6 +820,12 @@ public class SecondaryController {
         });
         //обработка оптимальных параметров
         but_optParam.setOnAction(event -> {
+            //сбрасываем прогресс бар
+            pb_exp.progressProperty().unbind();
+            lab_exp_status.textProperty().unbind();
+            //подвязываем прогресс бар
+            lab_exp_status.textProperty().bind(detectorViewModel.getExp_Search().messageProperty());
+            pb_exp.progressProperty().bind(detectorViewModel.getExp_Search().progressProperty());
             detectorViewModel.manual();
         });
         //обработка выключения линии А

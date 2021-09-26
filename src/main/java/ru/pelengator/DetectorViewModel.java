@@ -16,6 +16,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import ru.pelengator.dao.BDService;
 import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
@@ -23,10 +27,9 @@ import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +37,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import static ru.pelengator.App.loadJarDll;
 import static ru.pelengator.PropFile.*;
 import static ru.pelengator.dao.BDService.TypeColums.type_ID;
 
@@ -145,6 +149,8 @@ public class DetectorViewModel {
     private ReconnectService reconnect_service;
     //////////////////////////сервис ресета эксперимента///////////////////////////////////
     private ExpReset exp_Reset;
+    ////////////////////////////Сервис поиска параметров////////////////////////////////////////
+    private SearchGoodParamsService exp_Search;
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     private static Experiment experiment = new Experiment();//ссылка на текущий эксперимент
@@ -162,6 +168,7 @@ public class DetectorViewModel {
         initExp_NEDT_service();//инициализация сервиса расчета НЕДТ
         initReconnectService();//инициализация сервиса реконнекта
         initExp_Reset_service();//инициализация сервиса ресета
+        initExp_Search_service();//инициализация сервиса поиска параметров
         //при смене флага реконнект
         isOk.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -436,7 +443,13 @@ public class DetectorViewModel {
     private void initExp_NEDT_service() {
         exp_NEDT_service = new ExpServiceNEDT(controller, this);
     }
+    /**
+     * инициализация сервиса поиска параметров
+     */
+    private void initExp_Search_service() {
 
+        exp_Search = new SearchGoodParamsService(controller, this);
+    }
     /**
      * инициализация сервиса ресета эксперимента
      */
@@ -932,6 +945,7 @@ public class DetectorViewModel {
 
     //В работе
     public void manual() {
+        exp_Search.restart();
 
     }
 
@@ -997,7 +1011,12 @@ public class DetectorViewModel {
             }
         }
     }
-
+    //запрос последнего ID БД
+    public long lastID() {
+        BDService bDsaveData = new BDService();
+        long l = bDsaveData.takeLastIDFromBD();
+        return l;
+    }
     /**
      * Обновление графиков при загрузке из БД
      */
@@ -1042,6 +1061,25 @@ public class DetectorViewModel {
         alert.setContentText(text);
         alert.initModality(Modality.WINDOW_MODAL);
         alert.show();
+    }
+    /**
+     * Отработка отображения коннекта к БД
+     * В работе
+     *
+     * @param ap_dbConnect
+     */
+    public void dbIsAlive(ImageView ap_dbConnect) {
+        String text = "";
+        if (new BDService().bdIsAlive()) {
+            text = "images/icon2.png";
+        } else {
+            text = "images/icon1.png";
+        }
+        String finalText = text;
+        Platform.runLater(() -> {
+            InputStream resourceAsStream = getClass().getResourceAsStream(finalText);
+            ap_dbConnect.setImage(new Image(resourceAsStream));
+        });
     }
     ////////////////////////////////////////геттеры+сеттеры//////////////////////////////////////
 
@@ -1594,23 +1632,34 @@ public class DetectorViewModel {
         DetectorViewModel.RELOADCHARTS = RELOADCHARTS;
     }
 
-    /**
-     * Отработка отображения коннекта к БД
-     * В работе
-     *
-     * @param ap_dbConnect
-     */
-    public void dbIsAlive(ImageView ap_dbConnect) {
-        String text = "";
-        if (new BDService().bdIsAlive()) {
-            text = "images/icon2.png";
-        } else {
-            text = "images/icon1.png";
-        }
-        String finalText = text;
-        Platform.runLater(() -> {
-            InputStream resourceAsStream = getClass().getResourceAsStream(finalText);
-            ap_dbConnect.setImage(new Image(resourceAsStream));
-        });
+
+
+    public SearchGoodParamsService getExp_Search() {
+        return exp_Search;
     }
+
+    public void setExp_Search(SearchGoodParamsService exp_Search) {
+        this.exp_Search = exp_Search;
+    }
+
+    public boolean savePDF() {
+        try {
+            String path = loadJarDll("shablon.pdf");
+            File file = new File(path);
+            PDDocument pDDocument = PDDocument.load(file);
+
+            PDAcroForm pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
+
+            PDTextField field = (PDTextField)pDAcroForm.getField("Text1");
+
+            field.setDefaultValue("ee");
+
+
+            System.out.println("country combo "+ field.getAlternateFieldName());
+            pDDocument.save("shablon1.pdf");
+            pDDocument.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;}
 }

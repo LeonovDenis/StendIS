@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.SecondaryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.SecondaryController">
    <children>
       <BorderPane layoutX="135.0" layoutY="99.0" prefHeight="900.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -832,6 +832,11 @@
                               <Button fx:id="but_loadFileExp" layoutX="1436.0" layoutY="681.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="141.0" text="Загрузить из БД" />
                               <TextField fx:id="tf_IDexp" alignment="CENTER_RIGHT" layoutX="1506.0" layoutY="735.0" prefHeight="25.0" prefWidth="71.0" promptText="ID" />
                               <ImageView fx:id="ap_dbConnect" fitHeight="30.0" fitWidth="37.0" layoutX="1539.0" layoutY="769.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button fx:id="bt_saveOtchet" layoutX="1436.0" layoutY="735.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="64.0" text="Сохранить отчет" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" wrapText="true">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Button>
                            </children></AnchorPane>
                   </content>
                 </Tab>
