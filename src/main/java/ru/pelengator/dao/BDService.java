@@ -105,23 +105,18 @@ public class BDService {
         } finally {
             //Закрытие ресурсов
             try {
-                if (statement != null) {
-                    conn.close();
-                }
                 if (preparedStatement != null) {
                     preparedStatement.close();
                 }
             } catch (SQLException se) {
+                //ignore
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
             } catch (SQLException e) {
-                e.printStackTrace();
+                //ignore
             }
         }
         return result;
@@ -194,13 +189,14 @@ public class BDService {
                     conn.close();
                 }
             } catch (SQLException se) {
+                //ignore
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                //ignore
             }
         }
         return experiments;
@@ -319,7 +315,7 @@ public class BDService {
                     if (i == 0) {
                         sql.append("temp = ? ,");
                     } else {
-                        preparedStatement.setInt(k++, exp.gettInt());
+                        preparedStatement.setInt(k++, exp.getTemp());
                     }
                 }
                 if (!(currentExperimentBD.getMode()).equals(exp.getMode())) {
@@ -392,10 +388,15 @@ public class BDService {
                     sql.append("\nWHERE ").append(typeColums.getValue()).append(" = ").append(value);
                     preparedStatement = conn.prepareStatement(sql.toString());
                 } else {
-                    //Выполнение подготовленного запроса
-                    preparedStatement.executeUpdate();
+                    if (k == 1) {
+                        result = false;
+                    } else {
+                        //Выполнение подготовленного запроса
+                        preparedStatement.executeUpdate();
+                        result = true;
+                    }
                 }
-                result = true;
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -403,17 +404,18 @@ public class BDService {
             e.printStackTrace();
         } finally {
             try {
-                if (statement != null) {
-                    conn.close();
+                if (preparedStatement != null) {
+                    preparedStatement.close();
                 }
             } catch (SQLException se) {
+                //ignore
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                //ignore
             }
         }
         return result;
@@ -439,24 +441,49 @@ public class BDService {
                 aLong = resultSet.getLong(1);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            //ignore
         } catch (Exception e) {
-            e.printStackTrace();
+            //ignore
         } finally {
             try {
                 if (statement != null) {
-                    conn.close();
+                    statement.close();
                 }
             } catch (SQLException se) {
+                //ignore
             }
             try {
                 if (conn != null) {
                     conn.close();
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                //ignore
             }
         }
         return aLong;
     }
+
+    /**
+     * Проверка доступности базы
+     *
+     * @return
+     */
+    public boolean bdIsAlive() {
+        boolean res = false;
+        try {
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            res = true;
+        } catch (Exception e) {
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    //ignore
+                }
+            }
+        }
+        return res;
+    }
+
 }

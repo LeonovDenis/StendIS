@@ -90,6 +90,8 @@ public class ExpServiceNEDT extends Service<Void> {
                 if (dataArraySred_30==null||dataArraySred_40==null){
                     updateMessage("Выход .... нет данных");
                     updateProgress(1, 1);
+                    loadnextBDdata();
+                    cancelled();
                     return null;
                 }
                 //расчет недт
@@ -110,6 +112,7 @@ public class ExpServiceNEDT extends Service<Void> {
                 updateProgress(0.95, 1);
                 updateMessage("Готов");
                 updateProgress(1, 1);
+                loadnextBDdata();//при загрузке из бд сбрасывает флаг
                 return null;
             }
 
@@ -131,12 +134,8 @@ public class ExpServiceNEDT extends Service<Void> {
             @Override
             protected void cancelled() {
                 super.cancelled();
-                System.err.println("cancelled!");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("НЕДТ не посчиталось....Ошибка");
-                alert.setTitle("Ошибка сервиса");
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "3. Итоговый расчет");
             }
 
             /**
@@ -145,15 +144,33 @@ public class ExpServiceNEDT extends Service<Void> {
             @Override
             protected void failed() {
                 super.failed();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("НЕДТ не посчиталось....Ошибка");
-                alert.setTitle("Ошибка сервиса");
-                alert.setGraphic(setErrorMSG(this.getException()));
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
-                resetButton("#10d015", "3. Итоговый расчет [ОК]");
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "3. Итоговый расчет");
             }
         };
+    }
+
+    /**
+     * Отображение данных из БД
+     */
+    private void loadnextBDdata() {
+        if (detectorViewModel.isRELOADCHARTS()) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        detectorViewModel.setRELOADCHARTS(false);
+                    });
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     /**
@@ -353,7 +370,7 @@ public class ExpServiceNEDT extends Service<Void> {
             resetButton("#10d015", "2. Расчет ЭШРТ [ОК]");
             //вывод текстовой информации
             setText(controller, detectorViewModel);
-            showAlert(sb);
+
         });
     }
 

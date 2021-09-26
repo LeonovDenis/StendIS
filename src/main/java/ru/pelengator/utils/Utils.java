@@ -105,7 +105,7 @@ public class Utils {
      */
     public static <T> ArrayList<T> toArrayList(ObservableList<T> list) {
         ArrayList<T> arrayList = new ArrayList<>();
-        arrayList.addAll(arrayList);
+        arrayList.addAll(list);
         return arrayList;
     }
 
@@ -143,7 +143,7 @@ public class Utils {
         ArrayList<Frame> frameArrayList = new ArrayList<>();
         Gson gson = new Gson();
         for (int i = 0; i <jarray.size() ; i++) {
-            Frame frame = gson.fromJson(jarray.get(2), Frame.class);
+            Frame frame = gson.fromJson(jarray.get(i), Frame.class);
             frameArrayList.add(frame);
         }
         return frameArrayList;

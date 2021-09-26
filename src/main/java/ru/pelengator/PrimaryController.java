@@ -122,8 +122,6 @@ public class PrimaryController {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double widthScreen = screenSize.getWidth();
         stage.setX(widthScreen - 1610);
-
-
     }
 
     /**
@@ -147,7 +145,7 @@ public class PrimaryController {
                 cs.update(buf, 0, nLength);
             }
         } catch (IOException e) {
-            System.out.println("CRC =0 так как работаем в IDE");
+          //ignore
         }
         s = cs.getValue();
         return s;

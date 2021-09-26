@@ -3,10 +3,16 @@ package ru.pelengator;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.concurrent.ScheduledService;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
@@ -17,8 +23,15 @@ import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;
@@ -29,7 +42,7 @@ public class DetectorViewModel {
     //флаг отправки деселекции
     private static boolean SENDDESEL = true;
     //Flag перегрузки графиков
-    private static boolean RELOADCHARTS = false;
+    private static transient boolean RELOADCHARTS = false;
     private static Thread scenario = new Thread();
 
     //флаг темнового графика. Для отобр кнопок
@@ -391,7 +404,7 @@ public class DetectorViewModel {
     private void initMain_chart_service() {
         main_chart_service = new Animator(controller, this);
         main_chart_service.setPeriod(Duration.millis(getPause_video()));
-        main_chart_service.setRestartOnFailure(false);
+        main_chart_service.setRestartOnFailure(true);
         new Thread(() -> {
             try {
                 //отложенный старт чтобы подгрузились окна
@@ -748,6 +761,8 @@ public class DetectorViewModel {
                     setVva(0);
                     TimeUnit.MILLISECONDS.sleep(time);
                     setIsPowerOn(false);
+                    TimeUnit.MILLISECONDS.sleep(time);
+                    setReset(true);
                     Platform.runLater(() -> {
                         but_powerOn.setText("Включить");
                         but_powerOff.setText("Выключено");
@@ -972,9 +987,13 @@ public class DetectorViewModel {
             if (experiments.size() == 0) {
                 return false;
             } else {
-                setExperiment(experiments.get(0));
-                refrashCharts();
-                return true;
+                if (experiments.get(0).getStartExpDate() == null) {
+                    return false;
+                } else {
+                    setExperiment(experiments.get(0));
+                    refrashCharts();
+                    return true;
+                }
             }
         }
     }
@@ -983,21 +1002,11 @@ public class DetectorViewModel {
      * Обновление графиков при загрузке из БД
      */
     private void refrashCharts() {
-        Thread thread = new Thread(() -> {
-            setRELOADCHARTS(true);
-            try {
-                Platform.runLater(() -> controller.getBut_start_Shum().fire());
-                TimeUnit.MILLISECONDS.sleep(1000);
-                Platform.runLater(() -> controller.getBut_start_40().fire());
-                TimeUnit.MILLISECONDS.sleep(1000);
-                Platform.runLater(() -> controller.getBut_start_NEDT().fire());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            setRELOADCHARTS(false);
+        setRELOADCHARTS(true);
+        Platform.runLater(() -> {
+            controller.getBut_start_Shum().fire();
         });
-        thread.setDaemon(true);
-        thread.start();
+
     }
 
     // остановка главных графиков
@@ -1583,5 +1592,25 @@ public class DetectorViewModel {
 
     public static void setRELOADCHARTS(boolean RELOADCHARTS) {
         DetectorViewModel.RELOADCHARTS = RELOADCHARTS;
+    }
+
+    /**
+     * Отработка отображения коннекта к БД
+     * В работе
+     *
+     * @param ap_dbConnect
+     */
+    public void dbIsAlive(ImageView ap_dbConnect) {
+        String text = "";
+        if (new BDService().bdIsAlive()) {
+            text = "images/icon2.png";
+        } else {
+            text = "images/icon1.png";
+        }
+        String finalText = text;
+        Platform.runLater(() -> {
+            InputStream resourceAsStream = getClass().getResourceAsStream(finalText);
+            ap_dbConnect.setImage(new Image(resourceAsStream));
+        });
     }
 }

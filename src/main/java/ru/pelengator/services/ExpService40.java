@@ -71,15 +71,20 @@ public class ExpService40 extends Service<Void> {
                 updateMessage("Задание на выборку: " + frame_number + " значений. Каналы: [" + start_ch + "|" + stop_ch + "]");
                 //набор массива кадров
                 if (detectorViewModel.isRELOADCHARTS()) {//в случае загрузки из БД
-                    if (currentExp.getFrameArrayList40() == null) {
+                    if (currentExp==null||currentExp.getFrameArrayList40() == null) {
                         updateMessage("Нет кадров в БД");
                         updateProgress(1, 1);
+                        Platform.runLater(() -> {
+                            detectorViewModel.setRELOADCHARTS(false);
+                        });
+                        cancelled();
                         return null;
                     }
                     frameArrayList = FXCollections.observableArrayList(currentExp.getFrameArrayList40());
                     updateMessage("Кадры набраны из БД");
                     updateProgress(0.9D, 1);
                 } else {//В случае эксперимента
+                    initParams();
                     while (frameArrayList.size() < frame_number) {
                         Frame cloneFrame = DetectorViewModel.getMyFrame().clone();//клонируем кадр
                         if (lasID == cloneFrame.getId() || cloneFrame.getData() == null) {
@@ -108,6 +113,7 @@ public class ExpService40 extends Service<Void> {
                     updateMessage("Готов");
                 }
                 updateProgress(1, 1);
+                loadnextBDdata();//при загрузке из бд грузит следующий сервис
                 return null;
             }
 
@@ -119,6 +125,7 @@ public class ExpService40 extends Service<Void> {
                 super.succeeded();
                 detectorViewModel.getMain_chart_service().restart();
                 resetButton("#10d015", "2. Накопление при 40 [ОК]");//добавка
+
             }
 
             /**
@@ -127,13 +134,14 @@ public class ExpService40 extends Service<Void> {
             @Override
             protected void cancelled() {
                 super.cancelled();
-                System.err.println("cancelled!");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Шум не посчитался....Ошибка");
-                alert.setTitle("Отмена сервиса");
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
-                resetButton("#10d015", "2. Накопление при 40 [ОК]");//добавка
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "2. Накопление при 40");//добавка
+                Platform.runLater(() -> {
+                    //проверка разблокировки кнопки
+                    if (controller.getBut_start_NEDT().isDisabled()) {
+                        controller.getBut_start_NEDT().setDisable(false);
+                    }
+                });
             }
 
             /**
@@ -142,14 +150,40 @@ public class ExpService40 extends Service<Void> {
             @Override
             protected void failed() {
                 super.failed();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Сигнал не посчитался....Ошибка");
-                alert.setTitle("Ошибка сервиса");
-                alert.setGraphic(setErrorMSG(this.getException()));
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "2. Накопление при 40");//добавка
+                Platform.runLater(() -> {
+                    //проверка разблокировки кнопки
+                    if (controller.getBut_start_NEDT().isDisabled()) {
+                        controller.getBut_start_NEDT().setDisable(false);
+                    }
+                });
+
             }
         };
+    }
+
+    /**
+     * Отображение данных из БД
+     */
+    private void loadnextBDdata() {
+        if (detectorViewModel.isRELOADCHARTS()) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        controller.getBut_start_NEDT().fire();
+                    });
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     /**
@@ -285,7 +319,9 @@ public class ExpService40 extends Service<Void> {
         currentExp.setDataArraySred_40(dataArraySred_40);
         currentExp.setSredZnach40(sredZnach40);
         currentExp.setFrameArrayList40(toArrayList(frameArrayList));
-        currentExp.setEndExpDate(new Timestamp(System.currentTimeMillis()));
+        if(!detectorViewModel.isRELOADCHARTS()){//в случае работы с кадром не из базы - записываем дату
+            currentExp.setEndExpDate(new Timestamp(System.currentTimeMillis()));
+        }
         detectorViewModel.setExperiment(currentExp);
     }
 

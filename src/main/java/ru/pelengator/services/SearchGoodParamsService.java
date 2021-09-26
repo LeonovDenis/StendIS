@@ -8,6 +8,7 @@ import ru.pelengator.SecondaryController;
 
 /**
  * Сервис по поиску наилучших параметров системы
+ * В работе
  */
 public class SearchGoodParamsService extends ScheduledService<Void> {
 

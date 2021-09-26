@@ -228,6 +228,7 @@ public class Connector {
         if (TestForWork) {
             return FT_STATUS.FT_TESTING;
         }
+        value = (byte) reverse(value, 9);
         byte[] data = Bytes.from((byte) line).append(value).array();
         Bytes msg = header              //маска+ID
                 .append(SETDESEL[0])    //функция

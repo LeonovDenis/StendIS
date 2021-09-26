@@ -61,7 +61,6 @@ public class DataReciever extends ScheduledService<Integer> {
                 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 //Читаем данные из буфера
                 Bytes bytesData = detectorViewModel.getConnector().readData();
-
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 //проверка на пустой массив
                 if (bytesData.isEmpty()) {
@@ -104,7 +103,6 @@ public class DataReciever extends ScheduledService<Integer> {
                         Bytes fullFrame = Bytes.from(firstPartOfFrame).append(secondPartOfFrame);
                         int[] intArray = fullFrame.toIntArray();
                         ///обработка ошибки платы
-                        intArray = correcting(intArray);
                         //создание кадра
                         Frame frame = new Frame(new Timestamp(System.currentTimeMillis()), ++IDCounter, intArray);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,40 +115,6 @@ public class DataReciever extends ScheduledService<Integer> {
                 return null;
             }
         };
-    }
-
-    /**
-     * Обработка корректировка нумерации видеовыходов
-     *
-     * @param intArray входной массив кадра
-     * @return
-     */
-    private int[] correcting(int[] intArray) {
-        //OUT1;OUT4;OUT2;OUT3 следование каналов в распайке
-        int k = 0;
-        int m = 0;
-        int z = 0;
-        int[] tempArray = new int[intArray.length];
-        for (int i = 0; i < 284; i++) {
-            z = i % 4;
-            if (z == 1) {
-                tempArray[147 + (m++)] = intArray[i];
-            }
-            if (z == 2) {
-                tempArray[2 + (k++)] = intArray[i];
-            }
-            if (z == 3) {
-                tempArray[145 + (m++)] = intArray[i];
-            }
-            if (z == 0) {
-                tempArray[2 + (k++)] = intArray[i];
-            }
-        }
-        tempArray[0] = tempArray[2];
-        tempArray[1] = tempArray[3];
-        tempArray[144] = tempArray[146];
-        tempArray[145] = tempArray[147];
-        return tempArray;
     }
 
     /**

@@ -23,6 +23,7 @@ import ru.pelengator.utils.StatisticsUtils;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;
 import static ru.pelengator.utils.Utils.toArrayList;
@@ -68,8 +69,20 @@ public class ExpServiceShum extends Service<Void> {
             @Override
             protected Void call() throws Exception {
                 //создаем эксперимент
-                currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
-                        detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));
+                if (!detectorViewModel.isRELOADCHARTS()) {//если эксперимент не загружен из базы, то
+                    if(detectorViewModel.getExperiment().getEndExpDate()!=null){
+                        currentExp = detectorViewModel.getExperiment();
+                        currentExp.setDetectorName(detectorViewModel.getDetectorName());
+                        currentExp.setDetectorSerial(detectorViewModel.getNumbersDevises());
+                        currentExp.setTesterName(detectorViewModel.getTesterFIO());
+                        currentExp.setStartExpDate(new Timestamp(System.currentTimeMillis()));
+
+                    }else{
+                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
+                            detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));}
+                } else {
+                    currentExp = detectorViewModel.getExperiment();
+                }
                 updateMessage("Старт Сервиса расчета шума");
                 updateProgress(0.0, 1);
                 updateMessage("Сброс переменных");
@@ -81,9 +94,13 @@ public class ExpServiceShum extends Service<Void> {
                 updateMessage("Задание на выборку: " + frame_number + " значений. Каналы: [" + start_ch + "|" + stop_ch + "]");
                 //набор массива кадров
                 if (detectorViewModel.isRELOADCHARTS()) {//в случае загрузки из БД
-                    if (currentExp.getFrameArrayList30() == null) {
+                    if (currentExp==null||currentExp.getFrameArrayList30() == null) {
                         updateMessage("Нет кадров в БД");
                         updateProgress(1, 1);
+                        Platform.runLater(() -> {
+                            detectorViewModel.setRELOADCHARTS(false);
+                        });
+                        cancelled();
                         return null;
                     }
                     frameArrayList = FXCollections.observableArrayList(currentExp.getFrameArrayList30());
@@ -119,6 +136,7 @@ public class ExpServiceShum extends Service<Void> {
                 updateProgress(0.98, 1);
                 //Отображаем полученные расчеты
                 showResults();
+                loadnextBDdata();//при загрузке из бд грузит следующий сервис
                 return null;
             }
 
@@ -139,12 +157,14 @@ public class ExpServiceShum extends Service<Void> {
             @Override
             protected void cancelled() {
                 super.cancelled();
-                System.err.println("cancelled!");
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Шум не посчитался....Ошибка");
-                alert.setTitle("Отмена сервиса");
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "1. Накопление при 30");
+                Platform.runLater(() -> {
+                    //проверка разблокировки кнопки
+                    if (controller.getBut_start_40().isDisabled()) {
+                        controller.getBut_start_40().setDisable(false);
+                    }
+                });
             }
 
             /**
@@ -153,16 +173,39 @@ public class ExpServiceShum extends Service<Void> {
             @Override
             protected void failed() {
                 super.failed();
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Шум не посчитался....Ошибка");
-                alert.setTitle("Ошибка сервиса");
-                alert.setGraphic(setErrorMSG(this.getException()));
-                alert.initModality(Modality.WINDOW_MODAL);
-                alert.show();
-                controller.getBut_start_40().setDisable(false);
-                resetButton("#10d015", "1. Накопление при 30 [ОК]");
+                detectorViewModel.getMain_chart_service().restart();
+                resetButton("#FFD700", "1. Накопление при 30");
+                Platform.runLater(() -> {
+                    //проверка разблокировки кнопки
+                    if (controller.getBut_start_40().isDisabled()) {
+                        controller.getBut_start_40().setDisable(false);
+                    }
+                });
             }
         };
+    }
+
+    /**
+     * Отображение данных из БД
+     */
+    private void loadnextBDdata() {
+        if (detectorViewModel.isRELOADCHARTS()) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(() -> {
+                        controller.getBut_start_40().fire();
+                    });
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     /**

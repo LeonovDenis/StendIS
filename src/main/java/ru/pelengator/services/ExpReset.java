@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import ru.pelengator.App;
 import ru.pelengator.DetectorViewModel;
+import ru.pelengator.model.Experiment;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class ExpReset extends ScheduledService<Void> {
                 updateMessage("Сброс эксперимента");
                 updateProgress(0.1, 1);
                 //обновление эксперимента
-                detectorViewModel.setExperiment(null);
+                detectorViewModel.setExperiment(new Experiment());
                 updateProgress(0.4, 1);
                 //очистка графиков
                 Platform.runLater(() -> detectorViewModel.getController().setChartsToReset(App.getLoader()));

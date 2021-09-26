@@ -26,6 +26,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -248,6 +249,9 @@ public class SecondaryController {
     @FXML
     public
     TextField tf_norm;
+    @FXML
+    public
+    ImageView ap_dbConnect;
     /**
      * Ссылка на вьюмодел
      */
@@ -473,6 +477,7 @@ public class SecondaryController {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
                     detectorViewModel.allStop();
+                   detectorViewModel.dbIsAlive(ap_dbConnect); //в работе
                 } else {
                     detectorViewModel.allStart();
                 }
@@ -949,7 +954,6 @@ public class SecondaryController {
             pb_exp.progressProperty().unbind();
             lab_exp_status.textProperty().unbind();
             //останавливаем главный график
-            detectorViewModel.getMain_chart_service().cancel();
             //подвязываем прогресс бар
             lab_exp_status.textProperty().bind(detectorViewModel.getExp_Reset().messageProperty());
             pb_exp.progressProperty().bind(detectorViewModel.getExp_Reset().progressProperty());

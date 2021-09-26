@@ -100,7 +100,7 @@ public class Experiment {
      * Конструктор для БД
      */
     public Experiment() {
-        this.ID = 0L;
+      /**  this.ID = 0L;
         this.detectorName = "NULL";
         this.detectorSerial = "NULL";
         this.testerName = "NULL";
@@ -121,7 +121,7 @@ public class Experiment {
         this.sredZnach30 = 0D;
         this.sredZnach40 = 0D;
         this.NEDT = 0D;
-        this.matrix = new byte[]{0,1,1,0};
+        this.matrix = new byte[]{0,1,1,0};*/
     }
 
     /**
