@@ -432,7 +432,7 @@
                                                                   <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
                                                                </GridPane.margin>
                                                             </Label>
-                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Выход на режим" GridPane.rowIndex="2">
+                                                            <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Наработка [8-0.5]" GridPane.rowIndex="2">
                                                                <GridPane.margin>
                                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                                </GridPane.margin>
@@ -468,9 +468,9 @@
                                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                                                </GridPane.margin>
                                                             </Label>
-                                                            <TextField fx:id="tf_regim" alignment="CENTER" layoutX="193.0" layoutY="62.0" promptText="Не более 4 мин" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                            <TextField fx:id="tf_regim" alignment="CENTER" layoutX="193.0" layoutY="62.0" promptText="Время наработки" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                <opaqueInsets>
-                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                                  <Insets />
                                                                </opaqueInsets>
                                                                <GridPane.margin>
                                                                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

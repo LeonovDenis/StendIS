@@ -58,7 +58,9 @@ public class SecondaryController {
             category.add(String.valueOf(i + 1));
         }
     }
-
+    @FXML
+    public
+    Button bt_parload;
     ///////////////статистика по каналам
     @FXML
     public
@@ -269,7 +271,7 @@ public class SecondaryController {
     @FXML
     public TextField tf_regim;
     //////////////////////////////////////
-    //кнопка старт выхода на режим
+    //
     @FXML
     Button but_startMKS;
     @FXML
@@ -404,6 +406,7 @@ public class SecondaryController {
     //частота получения видео
     @FXML
     private TextField tf_pause_video;
+    private boolean fl_par=false;//парлоад
     //скорость обновления параметров
 
     @FXML
@@ -878,10 +881,11 @@ public class SecondaryController {
         bt_reconnect.setOnAction(event -> {
             detectorViewModel.reconnectDriver();
         });
-        //обработка кнопки старта подсчета времени выхода на режим
+        //обработка кнопки старта наработки
         but_regim.setOnAction(event -> {
             detectorViewModel.regimService();
         });
+
         //обработка кнопки старта работы МКС
         but_startMKS.setOnAction(event -> {
             fl_MKS_Working = !fl_MKS_Working;
@@ -1801,6 +1805,37 @@ public class SecondaryController {
         return but_start_NEDT;
     }
 
+    public TextField getTf_regim() {
+        return tf_regim;
+    }
+
+    public void setTf_regim(TextField tf_regim) {
+        this.tf_regim = tf_regim;
+    }
+
+    public Button getBut_startMKS() {
+        return but_startMKS;
+    }
+
+    public void setBut_startMKS(Button but_startMKS) {
+        this.but_startMKS = but_startMKS;
+    }
+
+    public Button getBut_powerOn() {
+        return but_powerOn;
+    }
+
+    public void setBut_powerOn(Button but_powerOn) {
+        this.but_powerOn = but_powerOn;
+    }
+
+    public Button getBut_powerOff() {
+        return but_powerOff;
+    }
+
+    public void setBut_powerOff(Button but_powerOff) {
+        this.but_powerOff = but_powerOff;
+    }
 }
 
 

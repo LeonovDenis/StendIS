@@ -23,6 +23,7 @@ import ru.pelengator.DetectorViewModel;
 import ru.pelengator.model.Frame;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.model.Connector.reverse;
 import static ru.pelengator.utils.Utils.convertBytesArrayToIntArray;
 
 import java.sql.Timestamp;
@@ -64,7 +65,7 @@ public class DataReciever extends ScheduledService<Integer> {
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 //проверка на пустой массив
                 if (bytesData.isEmpty()) {
-                    System.out.println("В буфере ничего нет: " + bytesData);
+                  //  System.out.println("В буфере ничего нет: " + bytesData);
                     detectorViewModel.setIsOk(false);// флаг на отсутствие коннекта с платой
                     return null;// выход
                 }
@@ -417,7 +418,8 @@ public class DataReciever extends ScheduledService<Integer> {
             }
             for (int i = 0; i < 144; i++) {
                 String str = String.valueOf(i + 1);
-                byte i1 = matr[i];
+                byte i1  = (byte) reverse(matr[i], 9);
+               // byte i1 = matr[i];
                 for (int j = 0; j < 8; j++) {
                     String str2 = String.valueOf(8 - j);
                     for (Button b : buttons) {

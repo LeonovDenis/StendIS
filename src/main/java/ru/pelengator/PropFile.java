@@ -25,6 +25,7 @@ public class PropFile {
     public static double DELTA_TEMP = 10.0D;//дельта температуры (30-40)
     public static double MNOSHITEL = 1_000_000;// дополнительный множитель
     public static int ONE_K = 1000; //константа для перевода в милли
+    public static int SYCLE;//число циклов наработки
 
     public static final int SIZEMINMSG = 60;//максимальная длина маленького сообщения
     public static byte DEV_ID;
@@ -88,6 +89,7 @@ public class PropFile {
             String str_RESDESEL = appProps.getProperty("msg.RESDESEL");
             String str_RANGE = appProps.getProperty("dev.RANGE");
             String str_ACPNUMBER = appProps.getProperty("dev.ACPNUMBER");
+            String str_SYCLE = appProps.getProperty("dev.sycle");
 
             JDBC_DRIVER = appProps.getProperty("bd.JDBC_DRIVER");
             DB_URL = appProps.getProperty("bd.DB_URL");
@@ -123,6 +125,8 @@ public class PropFile {
             RANGE = Integer.parseInt(str_RANGE);
             ACPNUMBER = Integer.parseInt(str_ACPNUMBER);
             MASHTAB = (RANGE / (float) (Math.pow(2, ACPNUMBER)));
+            SYCLE = Integer.parseInt(str_SYCLE);
+
             /////////////////////////////////////////////////////////////////////////////////////
         } catch (
                 IOException e) {

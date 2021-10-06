@@ -31,6 +31,32 @@ public class Connector {
      */
     public Connector() {
     }
+    /**
+     * Включение парлоада
+     *
+     * @param set - 0xFF -включение (true); 0x00 - выключение
+     * @return
+     */
+    public FT_STATUS setParload(boolean set) {
+        setLock();
+        //для теста
+        if (TestForWork) {
+            return FT_STATUS.FT_TESTING;
+        }
+        byte data;
+        if (set) {
+            data = (byte) 0xFF;//on
+        } else {
+            data = (byte) 0x00;//off
+        }
+        Bytes msg = header              //маска+ID
+                .append(SETPOWER[0])    //функция
+                .append((byte) 0x02)    //размер[команда+данные]||
+                .append((byte) 0x00)    //команда               |
+                .append(data);          //данные               _|
+        return driver2.writePipe(msg);
+    }
+
 
     /**
      * Подача питания VDD, VDDA
@@ -396,6 +422,7 @@ public class Connector {
      * @param bytes полученный массив
      */
     private void deleteLock(Bytes bytes) {
+
         int length = bytes.length();
         if (!getThreadArrayList().isEmpty()) {//Если есть стопнутые потоки
             //если пришло подтверждение
@@ -455,7 +482,7 @@ public class Connector {
      * @param t Сколько райб реверснуть
      * @return
      */
-    private static int reverse(int i, int t) {
+    public static int reverse(int i, int t) {
         int Shift = t - 1;
         int LowMask = 1;
         int HighMask = 1 << Shift;

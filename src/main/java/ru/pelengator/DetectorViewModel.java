@@ -20,6 +20,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
+import org.decimal4j.util.DoubleRounder;
+import org.jfree.data.time.Second;
+import ru.pelengator.charts.TimeChart;
 import ru.pelengator.dao.BDService;
 import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
@@ -31,10 +34,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.App.loadJarDll;
@@ -155,6 +155,11 @@ public class DetectorViewModel {
 
     private static Experiment experiment = new Experiment();//ссылка на текущий эксперимент
 
+    private long startNarabTime;//время старта наработки
+    private long stopNarabTime;//время остановки наработки
+    private boolean fl_narab = false;//флаг наработки
+    private Thread thread;
+
     /**
      * Инициализация
      */
@@ -172,9 +177,9 @@ public class DetectorViewModel {
         //при смене флага реконнект
         isOk.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                reconnect_service.cancel();
+                //   reconnect_service.cancel();
             } else {
-                reconnect_service.restart();
+                //    reconnect_service.restart();
             }
         });
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -443,6 +448,7 @@ public class DetectorViewModel {
     private void initExp_NEDT_service() {
         exp_NEDT_service = new ExpServiceNEDT(controller, this);
     }
+
     /**
      * инициализация сервиса поиска параметров
      */
@@ -450,6 +456,7 @@ public class DetectorViewModel {
 
         exp_Search = new SearchGoodParamsService(controller, this);
     }
+
     /**
      * инициализация сервиса ресета эксперимента
      */
@@ -763,7 +770,6 @@ public class DetectorViewModel {
     public Thread powerOff(Button but_powerOn, Button but_powerOff) {
         scenario = new Thread(() -> {
             Platform.runLater(() -> {
-                System.out.println("Запуск сценария старта");
                 int time = (int) (PAUSE * 2);
                 try {
                     TimeUnit.MILLISECONDS.sleep(time);
@@ -920,8 +926,81 @@ public class DetectorViewModel {
         thread.start();
     }
 
-    //обработка кнопки старта подсчета времени выхода на режим
+    //обработка кнопки старта наработки
     public void regimService() {
+        fl_narab = !fl_narab;
+        if (!fl_narab) {//при отмене
+            String msg = "";
+            thread.interrupt();
+            Platform.runLater(() -> {
+                controller.getBut_startMKS().fire();
+                controller.getTf_regim().setText(msg);
+            });
+        } else {//при старте
+            thread = new Thread(() -> {
+                TimeChart timeChart = new TimeChart();
+                Platform.runLater(() -> {
+                    timeChart.start();
+                });
+                String msg = "";
+                for (int i = 0; i < SYCLE; i++) {
+                    boolean fl_on = true;
+                    Platform.runLater(() -> {
+                        controller.getBut_startMKS().fire();
+                    });
+                    startNarabTime = System.currentTimeMillis();
+                    System.out.println("Start " + new Timestamp(startNarabTime));
+                    while ((System.currentTimeMillis() - startNarabTime) <= (TimeUnit.HOURS.toMillis(8))) {
+                        try {
+                            java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - startNarabTime);
+                            msg = "Работа[" + (i + 1) +
+                                    "] " + millis.toHours() +
+                                    "h " + millis.minusHours(millis.toHours()).toMinutes() +
+                                    "m";
+                            String finalMsg = msg;
+                            Platform.runLater(() -> {
+                                timeChart.getDataset().getSeries(0).add(new Second(new Date()),24 );
+                                timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid()/ONE_K, 3));
+                            });
+
+                            Platform.runLater(() -> controller.getTf_regim().setText(finalMsg));
+                            TimeUnit.MINUTES.sleep(1);
+                            if (((System.currentTimeMillis() - startNarabTime) >= (TimeUnit.MINUTES.toMillis(5))) && (fl_on)) {
+                                fl_on = !fl_on;
+
+                                Platform.runLater(() -> controller.getBut_powerOn().fire());
+                            }
+                        } catch (InterruptedException e) {
+                            //  ignore
+                        }
+                    }
+                    Platform.runLater(() -> controller.getBut_startMKS().fire());
+                    Platform.runLater(() -> controller.getBut_powerOff().fire());
+                    stopNarabTime = System.currentTimeMillis();
+                    System.out.println("Stop " + new Timestamp(stopNarabTime));
+                    while ((System.currentTimeMillis() - stopNarabTime) <= (TimeUnit.MINUTES.toMillis(30))) {
+                        try {
+                            java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - stopNarabTime);
+                            msg = "Отдых[" + (i + 1) +
+                                    "] " + millis.toHours() +
+                                    "h " + millis.minusHours(millis.toHours()).toMinutes() +
+                                    "m";
+                            String finalMsg1 = msg;
+                            Platform.runLater(() -> {
+                                timeChart.getDataset().getSeries(0).add(new Second(new Date()),0 );
+                                timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid()/ONE_K, 3));
+                            });
+                            Platform.runLater(() -> controller.getTf_regim().setText(finalMsg1));
+                            TimeUnit.MINUTES.sleep(1);
+                        } catch (InterruptedException e) {
+                            //   ignore
+                        }
+                    }
+                }
+            });
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     //обработка кнопки сохранения файла
@@ -1011,12 +1090,14 @@ public class DetectorViewModel {
             }
         }
     }
+
     //запрос последнего ID БД
     public long lastID() {
         BDService bDsaveData = new BDService();
         long l = bDsaveData.takeLastIDFromBD();
         return l;
     }
+
     /**
      * Обновление графиков при загрузке из БД
      */
@@ -1062,6 +1143,7 @@ public class DetectorViewModel {
         alert.initModality(Modality.WINDOW_MODAL);
         alert.show();
     }
+
     /**
      * Отработка отображения коннекта к БД
      * В работе
@@ -1377,6 +1459,10 @@ public class DetectorViewModel {
         });
     }
 
+    public float getFrame_mid() {
+        return frame_mid.get();
+    }
+
     public FloatProperty frame_minProperty() {
         return frame_min;
     }
@@ -1633,7 +1719,6 @@ public class DetectorViewModel {
     }
 
 
-
     public SearchGoodParamsService getExp_Search() {
         return exp_Search;
     }
@@ -1650,16 +1735,30 @@ public class DetectorViewModel {
 
             PDAcroForm pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
 
-            PDTextField field = (PDTextField)pDAcroForm.getField("Text1");
+            PDField field = pDAcroForm.getField("Txt1");
 
-            field.setDefaultValue("ee");
+            field.setValue("ee");
+            field.setPartialName("SampleField");
 
 
-            System.out.println("country combo "+ field.getAlternateFieldName());
+            System.out.println("country combo " + field.getAlternateFieldName());
             pDDocument.save("shablon1.pdf");
             pDDocument.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;}
+        return true;
+    }
+
+    /**
+     * Тестовая отработка парлоада
+     *
+     * @param value
+     */
+    public void goPar(boolean value) {
+        Thread thread = new Thread(() -> new Connector().setParload(value));
+        thread.setName("Отработка парлоада");
+        thread.setDaemon(true);
+        thread.start();
+    }
 }
