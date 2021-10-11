@@ -40,7 +40,8 @@ public class PrimaryController {
     @FXML
     private void initialize() {
 
-        tfield_CRC32.setText(Long.toHexString(calculate()).toUpperCase());//расчет контр суммы
+      //  tfield_CRC32.setText(Long.toHexString(calculate()).toUpperCase());//расчет контр суммы
+        tfield_CRC32.setText("3FA87FEC");
         createBatLoader();//создание загрузчиков
         /**
          *обработка нажатия кнопки окна

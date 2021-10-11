@@ -16,11 +16,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.apache.pdfbox.pdmodel.interactive.form.PDField;
-import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.decimal4j.util.DoubleRounder;
+import org.jfree.chart.plot.Marker;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.ui.RectangleAnchor;
+import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.time.Second;
 import ru.pelengator.charts.TimeChart;
 import ru.pelengator.dao.BDService;
@@ -30,10 +30,12 @@ import ru.pelengator.model.Connector;
 import ru.pelengator.services.*;
 
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +44,7 @@ import static ru.pelengator.PropFile.*;
 import static ru.pelengator.dao.BDService.TypeColums.type_ID;
 
 public class DetectorViewModel {
-
+    public static TimeChart timeChart;
     //флаг отправки деселекции
     private static boolean SENDDESEL = true;
     //Flag перегрузки графиков
@@ -50,9 +52,10 @@ public class DetectorViewModel {
     private static Thread scenario = new Thread();
 
     //флаг темнового графика. Для отобр кнопок
-    boolean fl_normal = false;
+    private boolean fl_normal = false;
     //блокирующие объектs
     private static Object inBlock = new Object();
+    private static Object narabBlock = new Object();
     //пауза временного графика
     private static int millis_timer_medianChart = 500;
     //ссылка на контроллер
@@ -72,6 +75,7 @@ public class DetectorViewModel {
     private final transient StringProperty dir = new SimpleStringProperty("Прямое");
     private final transient StringProperty ccc = new SimpleStringProperty("0.2");
 
+    private static byte[] tempMatrix=new byte[144];
     private static final transient ObjectProperty<byte[]> matrix = new SimpleObjectProperty<>(new byte[LINENUMBER]);
     private transient BooleanProperty reset = new SimpleBooleanProperty(false);
     private transient IntegerProperty vddVddaPower = new SimpleIntegerProperty(0);
@@ -157,8 +161,8 @@ public class DetectorViewModel {
 
     private long startNarabTime;//время старта наработки
     private long stopNarabTime;//время остановки наработки
-    private boolean fl_narab = false;//флаг наработки
-    private Thread thread;
+    private volatile boolean fl_narab = false;//флаг наработки
+    private Thread thread;//поток наработки
 
     /**
      * Инициализация
@@ -174,6 +178,7 @@ public class DetectorViewModel {
         initReconnectService();//инициализация сервиса реконнекта
         initExp_Reset_service();//инициализация сервиса ресета
         initExp_Search_service();//инициализация сервиса поиска параметров
+        initNarabThread();//инициализация потока наработки
         //при смене флага реконнект
         isOk.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -322,25 +327,31 @@ public class DetectorViewModel {
                     b = (byte) 0x00;
                     dir = 0;
                     myMatrix((byte) 0xFF, false);
+                    if(oldValue.equals("1-Bypass")||oldValue.equals("2-Bypass")
+                            ||oldValue.equals("3-Bypass")||oldValue.equals("4-Bypass")){   setPixel(tempMatrix);}
                     break;
                 case "1-Bypass":
                     b = (byte) 0b1 << 4;
                     dir = 0;
+                   if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
                     myMatrix((byte) 0x81, false);
                     break;
                 case "2-Bypass":
                     b = (byte) 0b1 << 4;
                     dir = 0x01 << 3;
+                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
                     myMatrix((byte) 0x42, false);
                     break;
                 case "3-Bypass":
                     b = (byte) 0b110000;
                     dir = 0;
+                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
                     myMatrix((byte) 0x24, false);
                     break;
                 case "4-Bypass":
                     b = (byte) 0b110000;
                     dir = 0x01 << 3;
+                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
                     myMatrix((byte) 0x18, false);
                     break;
                 default:
@@ -363,6 +374,111 @@ public class DetectorViewModel {
         });
     }
     ////////////////////////////////////////инициализация сервисов//////////////////////////
+
+    /**
+     * инициализация сервиса реконнекта
+     */
+    private void initNarabThread() {
+        thread = new Thread(() -> {
+           StringBuilder sb=new StringBuilder();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("[dd.MM] HH:mm");
+            timeChart = new TimeChart();
+            Platform.runLater(() -> {
+                timeChart.start();
+            });
+            String msg = "";
+            for (int i = 0; i < SYCLE; i++) {
+                boolean fl_on = true;
+                Platform.runLater(() -> {
+                    controller.getBut_startMKS().fire();
+                });
+                startNarabTime = System.currentTimeMillis();
+                sb.append("\n["+(i+1)+"]"+ "Start "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+                Platform.runLater(() -> {
+                    addTimeStamp(sb);
+                });
+                while ((System.currentTimeMillis() - startNarabTime) <= (TimeUnit.MINUTES.toMillis(1))) {
+                    try {
+                        java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - startNarabTime);
+                        msg = "Работа[" + (i + 1) +
+                                "] " + millis.toHours() +
+                                "h " + millis.minusHours(millis.toHours()).toMinutes() +
+                                "m";
+                        String finalMsg = msg;
+                        Platform.runLater(() -> {
+                            timeChart.getDataset().getSeries(0).add(new Second(new Date()), 24);
+                            timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid() / ONE_K, 3));
+                        });
+
+                        Platform.runLater(() -> controller.getTf_regim().setText(finalMsg));
+                        TimeUnit.SECONDS.sleep(5);
+                        if (!fl_narab) {
+                            synchronized (narabBlock) {
+                                narabBlock.wait();
+                            }
+                        }
+                        if (((System.currentTimeMillis() - startNarabTime) >= (TimeUnit.MINUTES.toMillis(5))) && (fl_on)) {
+                            fl_on = !fl_on;
+                            Platform.runLater(() -> controller.getBut_powerOn().fire());
+                        }
+                    } catch (InterruptedException e) {
+                        //  ignore
+                    }
+                }
+                Platform.runLater(() -> controller.getBut_startMKS().fire());
+                Platform.runLater(() -> controller.getBut_powerOff().fire());
+                stopNarabTime = System.currentTimeMillis();
+                sb.append("\n["+(i+1)+"]"+ "Stop "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+                Platform.runLater(() -> {
+                    addTimeStamp(sb);
+                });
+                while ((System.currentTimeMillis() - stopNarabTime) <= (TimeUnit.MINUTES.toMillis(1))) {
+                    try {
+                        java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - stopNarabTime);
+                        msg = "Отдых[" + (i + 1) +
+                                "] " + millis.toHours() +
+                                "h " + millis.minusHours(millis.toHours()).toMinutes() +
+                                "m";
+                        String finalMsg1 = msg;
+                        Platform.runLater(() -> {
+                            timeChart.getDataset().getSeries(0).add(new Second(new Date()), 0);
+                            timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid() / ONE_K, 3));
+                        });
+                        Platform.runLater(() -> controller.getTf_regim().setText(finalMsg1));
+                        TimeUnit.SECONDS.sleep(5);
+                        if (!fl_narab) {
+                            synchronized (narabBlock) {
+                                narabBlock.wait();
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        //   ignore
+                    }
+                }
+            }
+            msg = "Готово";
+            String finalMsg2 = msg;
+            Platform.runLater(() -> {
+                controller.getTf_regim().setText(finalMsg2);
+            });
+            sb.append("\nГотово "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+            Platform.runLater(() -> {
+                addTimeStamp(sb);
+            });
+        });
+        thread.setDaemon(true);
+    }
+
+    private void addTimeStamp(StringBuilder sb) {
+        Marker start = new ValueMarker(24);
+        start.setLabelFont(new Font("Dialog",1,12));
+        start.setPaint(new Color(0,0,0, 0));
+        start.setLabel(sb.toString());
+        start.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
+        start.setLabelTextAnchor(TextAnchor.TOP_LEFT);
+        timeChart.getPlot().addRangeMarker(start);
+    }
+
 
     /**
      * инициализация сервиса реконнекта
@@ -931,75 +1047,19 @@ public class DetectorViewModel {
         fl_narab = !fl_narab;
         if (!fl_narab) {//при отмене
             String msg = "";
-            thread.interrupt();
             Platform.runLater(() -> {
                 controller.getBut_startMKS().fire();
                 controller.getTf_regim().setText(msg);
             });
+
         } else {//при старте
-            thread = new Thread(() -> {
-                TimeChart timeChart = new TimeChart();
-                Platform.runLater(() -> {
-                    timeChart.start();
-                });
-                String msg = "";
-                for (int i = 0; i < SYCLE; i++) {
-                    boolean fl_on = true;
-                    Platform.runLater(() -> {
-                        controller.getBut_startMKS().fire();
-                    });
-                    startNarabTime = System.currentTimeMillis();
-                    System.out.println("Start " + new Timestamp(startNarabTime));
-                    while ((System.currentTimeMillis() - startNarabTime) <= (TimeUnit.HOURS.toMillis(8))) {
-                        try {
-                            java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - startNarabTime);
-                            msg = "Работа[" + (i + 1) +
-                                    "] " + millis.toHours() +
-                                    "h " + millis.minusHours(millis.toHours()).toMinutes() +
-                                    "m";
-                            String finalMsg = msg;
-                            Platform.runLater(() -> {
-                                timeChart.getDataset().getSeries(0).add(new Second(new Date()),24 );
-                                timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid()/ONE_K, 3));
-                            });
-
-                            Platform.runLater(() -> controller.getTf_regim().setText(finalMsg));
-                            TimeUnit.MINUTES.sleep(1);
-                            if (((System.currentTimeMillis() - startNarabTime) >= (TimeUnit.MINUTES.toMillis(5))) && (fl_on)) {
-                                fl_on = !fl_on;
-
-                                Platform.runLater(() -> controller.getBut_powerOn().fire());
-                            }
-                        } catch (InterruptedException e) {
-                            //  ignore
-                        }
-                    }
-                    Platform.runLater(() -> controller.getBut_startMKS().fire());
-                    Platform.runLater(() -> controller.getBut_powerOff().fire());
-                    stopNarabTime = System.currentTimeMillis();
-                    System.out.println("Stop " + new Timestamp(stopNarabTime));
-                    while ((System.currentTimeMillis() - stopNarabTime) <= (TimeUnit.MINUTES.toMillis(30))) {
-                        try {
-                            java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - stopNarabTime);
-                            msg = "Отдых[" + (i + 1) +
-                                    "] " + millis.toHours() +
-                                    "h " + millis.minusHours(millis.toHours()).toMinutes() +
-                                    "m";
-                            String finalMsg1 = msg;
-                            Platform.runLater(() -> {
-                                timeChart.getDataset().getSeries(0).add(new Second(new Date()),0 );
-                                timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid()/ONE_K, 3));
-                            });
-                            Platform.runLater(() -> controller.getTf_regim().setText(finalMsg1));
-                            TimeUnit.MINUTES.sleep(1);
-                        } catch (InterruptedException e) {
-                            //   ignore
-                        }
-                    }
+            if (thread.getState() == Thread.State.WAITING) {
+                synchronized (narabBlock) {
+                    narabBlock.notify();
                 }
-            });
-            thread.setDaemon(true);
-            thread.start();
+            } else if (thread.getState() == Thread.State.NEW){
+                thread.start();
+            }
         }
     }
 
@@ -1022,10 +1082,9 @@ public class DetectorViewModel {
         take_NEDT(barChart_NETD, barChart_NETD_All);
     }
 
-    //В работе
+    //отработка конкретного массива
     public void manual() {
-        exp_Search.restart();
-
+        setPixel(getMatrix());
     }
 
     //стандартный запуск расчета эксперимента
@@ -1727,38 +1786,4 @@ public class DetectorViewModel {
         this.exp_Search = exp_Search;
     }
 
-    public boolean savePDF() {
-        try {
-            String path = loadJarDll("shablon.pdf");
-            File file = new File(path);
-            PDDocument pDDocument = PDDocument.load(file);
-
-            PDAcroForm pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
-
-            PDField field = pDAcroForm.getField("Txt1");
-
-            field.setValue("ee");
-            field.setPartialName("SampleField");
-
-
-            System.out.println("country combo " + field.getAlternateFieldName());
-            pDDocument.save("shablon1.pdf");
-            pDDocument.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    /**
-     * Тестовая отработка парлоада
-     *
-     * @param value
-     */
-    public void goPar(boolean value) {
-        Thread thread = new Thread(() -> new Connector().setParload(value));
-        thread.setName("Отработка парлоада");
-        thread.setDaemon(true);
-        thread.start();
-    }
 }

@@ -37,6 +37,7 @@ import javafx.util.converter.*;
 import ru.pelengator.model.Connector;
 import ru.pelengator.charts.ModernChart;
 import ru.pelengator.charts.SampleBarChart;
+import ru.pelengator.model.DocMaker;
 import ru.pelengator.utils.ManualResetEvent;
 
 import static ru.pelengator.PropFile.*;
@@ -290,7 +291,7 @@ public class SecondaryController {
     Button but_setAllPixel;
     // кнопка выбора пикселей
     @FXML
-    Button but_optParam;
+    Button but_setMyPixel;
     // кнопка выключения пикселей
     @FXML
     Button but_setNonePixel;
@@ -810,7 +811,7 @@ public class SecondaryController {
     private void initButtons() {
         //обработка сохранения отчета
         bt_saveOtchet.setOnAction(event -> {
-           boolean res=detectorViewModel.savePDF();
+           boolean res=new DocMaker(detectorViewModel).savePDF();
             checkBT(res, bt_saveOtchet, "Сохранено", "Ошибка");
         });
         //обработка включения всех пикселей
@@ -821,15 +822,9 @@ public class SecondaryController {
         but_setNonePixel.setOnAction(event -> {
             detectorViewModel.setNonePixel();
         });
-        //обработка оптимальных параметров
-        but_optParam.setOnAction(event -> {
-            //сбрасываем прогресс бар
-            pb_exp.progressProperty().unbind();
-            lab_exp_status.textProperty().unbind();
-            //подвязываем прогресс бар
-            lab_exp_status.textProperty().bind(detectorViewModel.getExp_Search().messageProperty());
-            pb_exp.progressProperty().bind(detectorViewModel.getExp_Search().progressProperty());
-            detectorViewModel.manual();
+        //обработка пикселей
+        but_setMyPixel.setOnAction(event -> {
+           detectorViewModel.manual();
         });
         //обработка выключения линии А
         but_line_A.setOnAction(event -> {
@@ -1392,7 +1387,7 @@ public class SecondaryController {
          * Вызов подробного графика при клике на основной
          */
         stringNumberBarChart.setOnMouseClicked(event -> {
-            if (detectorViewModel.getExperiment() != null) {
+            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30()!= null)) {
                 new ModernChart().start("Подробный график",
                         "Шум по фотоприёмнику", "Каналы", "Напряжение, мВ",
                         detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_Dataset30_40,
@@ -1460,7 +1455,7 @@ public class SecondaryController {
          * Вызов подробного графика при клике на основной
          */
         stringNumberBarChart.setOnMouseClicked(event -> {
-            if (detectorViewModel.getExperiment() != null) {
+            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30()!= null)) {
                 new ModernChart().start("Подробный график",
                         "Средние значения выходного сигнала", "Каналы", "Напряжение, мВ",
                         detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_Dataset30_40,

@@ -5,8 +5,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.*;
@@ -27,6 +30,8 @@ import org.jfree.data.xy.XYDataset;
 
 public class TimeChart implements ChartMouseListenerFX {
 
+    ChartViewer viewer;
+    static XYPlot plot;
 
     private static TimeSeriesCollection dataset;
 
@@ -53,7 +58,7 @@ public class TimeChart implements ChartMouseListenerFX {
     private static JFreeChart createChart(XYDataset dataset) {
         JFreeChart chart = ChartFactory.createTimeSeriesChart("Наработка", null, "Напряжение, В", dataset);
         chart.setBackgroundPaint(Color.white);
-        XYPlot plot = (XYPlot) chart.getPlot();
+        plot = (XYPlot) chart.getPlot();
         plot.setDomainPannable(true);
         plot.setRangePannable(true);
         plot.setDomainCrosshairVisible(true);
@@ -85,10 +90,16 @@ public class TimeChart implements ChartMouseListenerFX {
         XYDataset data = createDataset();
 
         JFreeChart chartt =createChart(data);
-        ChartViewer viewer = new ChartViewer(chartt);
+        viewer = new ChartViewer(chartt);
         viewer.addChartMouseListener(this);
         Scene scene = new Scene(viewer);
         Stage newWindow = new Stage();
+        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                windowEvent.consume();
+            }
+        });
         newWindow.setTitle("");
         newWindow.setScene(scene);
         newWindow.show();
@@ -110,5 +121,17 @@ public class TimeChart implements ChartMouseListenerFX {
 
     public static void setDataset(TimeSeriesCollection dataset) {
         TimeChart.dataset = dataset;
+    }
+
+    public ChartViewer getViewer() {
+        return viewer;
+    }
+
+    public static XYPlot getPlot() {
+        return plot;
+    }
+
+    public static void setPlot(XYPlot plot) {
+        TimeChart.plot = plot;
     }
 }

@@ -87,7 +87,7 @@ public class ExpServiceNEDT extends Service<Void> {
                 initParams();
                 updateProgress(0.2, 1);
                 //проверка наличия данных
-                if (dataArraySred_30==null||dataArraySred_40==null){
+                if (dataArraySred_30 == null || dataArraySred_40 == null) {
                     updateMessage("Выход .... нет данных");
                     updateProgress(1, 1);
                     loadnextBDdata();
@@ -240,7 +240,7 @@ public class ExpServiceNEDT extends Service<Void> {
     }
 
     private void showAlert(StringBuilder s) {
-        if (s.toString().isEmpty()){
+        if (s.toString().isEmpty()) {
             return;
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -329,16 +329,20 @@ public class ExpServiceNEDT extends Service<Void> {
     private void takeCountOfPixelAndShow() {
         countDeselPixel = 0;
         maxCountDeselPixelInLine = 0;
-        byte[] matrix = currentExp.getMatrix();
-        for (byte b :
-                matrix) {
-            BitSet bitSet = Bytes.from(b).toBitSet();
-            int cardinality = bitSet.cardinality();
-            if (cardinality < 8) {
-                countDeselPixel = countDeselPixel + (8 - cardinality);
-                if (maxCountDeselPixelInLine < (8 - cardinality))
-                    maxCountDeselPixelInLine = (8 - cardinality);
+        if (currentExp.getMode().equals("ВЗН")) {
+            byte[] matrix = currentExp.getMatrix();
+            for (byte b :
+                    matrix) {
+                BitSet bitSet = Bytes.from(b).toBitSet();
+                int cardinality = bitSet.cardinality();
+                if (cardinality < 8) {
+                    countDeselPixel = countDeselPixel + (8 - cardinality);
+                    if (maxCountDeselPixelInLine < (8 - cardinality))
+                        maxCountDeselPixelInLine = (8 - cardinality);
+                }
             }
+        } else {
+        //по нулям
         }
         Platform.runLater(() -> {
             controller.lab_countDeselPixel.setText(String.valueOf(countDeselPixel));

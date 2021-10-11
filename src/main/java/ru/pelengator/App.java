@@ -118,6 +118,15 @@ public class App extends Application {
         return temp.getAbsolutePath();//ссылка на временный файл
     }
 
+    /**
+     * Загрузка временного файла
+     * @param name имя файла
+     * @return путь к временному файлу
+     */
+    public static String loadFilePath(String name) {
+        return loadJarDll(name);
+    }
+
     public static Scene getScene() {
         return scene;
     }

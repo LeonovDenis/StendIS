@@ -30,6 +30,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  * Класс вспомогательных графиков
  */
 public class ModernChart {
+
     public static final int TIPE_Dataset30_40 = 0;
     public static final int TIPE_DatasetNEDT = 1;
     public static final int TIPE_DatasetNEDT_RASP = 2;
@@ -140,6 +141,10 @@ public class ModernChart {
                 double y2 = DatasetUtils.findYValue(plot.getDataset(), 1, (int) x);
                 this.yCrosshair2.setValue(y2);
             }
+        }
+
+        public ChartViewer getChartViewer() {
+            return chartViewer;
         }
     }
 
@@ -254,4 +259,5 @@ public class ModernChart {
         newWindow.setScene(scene);
         newWindow.show();
     }
+
 }

@@ -20,7 +20,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 
 public class SampleBarChart implements ChartMouseListenerFX {
-
+    private static ChartViewer viewer;
     /**
      * Создаем датасет
      * @return The dataset.
@@ -64,7 +64,7 @@ public class SampleBarChart implements ChartMouseListenerFX {
     public void start(String winTitle, String title, String xLable, String yLable, Map<String, Number> columnKey) {
         CategoryDataset dataset = createDataset(columnKey, title);
         JFreeChart chart = createChart(dataset, title, xLable, yLable);
-        ChartViewer viewer = new ChartViewer(chart);
+        viewer = new ChartViewer(chart);
         viewer.addChartMouseListener(this);
         Scene scene = new Scene(viewer);
         Stage newWindow = new Stage();
@@ -83,4 +83,7 @@ public class SampleBarChart implements ChartMouseListenerFX {
         // ignore
     }
 
+    public static ChartViewer getViewer() {
+        return viewer;
+    }
 }
