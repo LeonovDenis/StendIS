@@ -12,7 +12,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import ru.pelengator.model.Connector;
 
@@ -50,12 +52,15 @@ public class PrimaryController {
         b_start.setOnAction(event -> {
 
             if (tfield_FPU.getText().trim().equals(DETECTORNAME)) {
-                Scene scene = new Scene(App.getRoot());
+                ScrollPane scrollPane = new ScrollPane();
+                scrollPane.setPrefViewportHeight(500);
+                scrollPane.setPrefViewportWidth(1000);
+                scrollPane.setContent(App.getRoot());
+                Scene scene = new Scene(scrollPane);
                 Stage stage = App.getPrimaryStage();
                 stage.hide();
-                stage.setResizable(false);
-                setOnMidl(stage);
                 stage.setScene(scene);
+                setOnMidl(stage,scene);
                 stage.show();
                 //отработка закрытия окна
                 stage.setOnCloseRequest(t -> {
@@ -118,11 +123,11 @@ public class PrimaryController {
      *
      * @param stage
      */
-    private void setOnMidl(Stage stage) {
+    private void setOnMidl(Stage stage,Scene scene) {
         stage.setY(0d);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double widthScreen = screenSize.getWidth();
-        stage.setX(widthScreen - 1610);
+               stage.setX(widthScreen-1000-30);
     }
 
     /**

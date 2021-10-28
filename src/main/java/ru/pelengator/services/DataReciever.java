@@ -328,6 +328,7 @@ public class DataReciever extends ScheduledService<Integer> {
             } else {
                 return null;
             }
+
             if (list.size() == 6) {
 
                 root.add(new Label("Ёмкость: "), 0, 0);
@@ -416,6 +417,7 @@ public class DataReciever extends ScheduledService<Integer> {
                 row = 8 - (k / (CHANNELNUMBER / 2));
                 buttons.get(k).setId(bt + ":" + row + ":" + "Включен");
             }
+
             for (int i = 0; i < 144; i++) {
                 String str = String.valueOf(i + 1);
                 byte i1  = (byte) reverse(matr[i], 9);

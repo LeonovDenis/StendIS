@@ -30,15 +30,14 @@ import org.jfree.data.xy.XYSeriesCollection;
  * Класс вспомогательных графиков
  */
 public class ModernChart {
-
+    static JFreeChart charttt;
     public static final int TIPE_Dataset30_40 = 0;
     public static final int TIPE_DatasetNEDT = 1;
     public static final int TIPE_DatasetNEDT_RASP = 2;
-
     /**
      * Вложенный класс панели графика
      */
-    static class MyPane extends StackPane implements ChartMouseListenerFX {
+    public static class MyPane extends StackPane implements ChartMouseListenerFX {
 
         private ChartViewer chartViewer;//окно для вывода графика
         private Crosshair xCrosshair;//перекрестие
@@ -66,6 +65,7 @@ public class ModernChart {
                 dataset = createDatasetNEDT_RASP(start, end, mass);
             }
             JFreeChart chart = createChart(dataset, title, xLable, yLable);
+            charttt=chart;
             XYPlot xyPlot = chart.getXYPlot();
             if (tipe == TIPE_DatasetNEDT_RASP) {
                 xyPlot.getDomainAxis().setLowerBound(start - ((mass[0].length - 1) / 2) - 10);
@@ -77,6 +77,7 @@ public class ModernChart {
                 xyPlot.getDomainAxis().setLowerBound(start - 10);
                 xyPlot.getDomainAxis().setUpperBound(end + 10);
             }
+
             this.chartViewer = new ChartViewer(chart);
             this.chartViewer.addChartMouseListener(this);
             getChildren().add(this.chartViewer);
@@ -143,9 +144,6 @@ public class ModernChart {
             }
         }
 
-        public ChartViewer getChartViewer() {
-            return chartViewer;
-        }
     }
 
     /**
@@ -260,4 +258,17 @@ public class ModernChart {
         newWindow.show();
     }
 
+    public JFreeChart startView(String winTitle, String title, String xLable, String yLable, int start, int end, int tipe, double[]... mass) {
+        MyPane myPane = new MyPane(title, xLable, yLable, start, end, tipe, mass);
+
+       return getCharttt();
+    }
+
+    public static JFreeChart getCharttt() {
+        return charttt;
+    }
+
+    public static void setCharttt(JFreeChart charttt) {
+        ModernChart.charttt = charttt;
+    }
 }

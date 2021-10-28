@@ -12,6 +12,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
@@ -19,9 +20,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import org.decimal4j.util.DoubleRounder;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.fx.ChartViewer;
 import ru.pelengator.App;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.SecondaryController;
+import ru.pelengator.charts.ModernChart;
 import ru.pelengator.model.Experiment;
 
 import java.text.DecimalFormat;
@@ -31,6 +35,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.charts.ModernChart.TIPE_Dataset30_40;
+import static ru.pelengator.charts.ModernChart.TIPE_DatasetNEDT;
 
 /**
  * Сервис расчета ключевых параметров
@@ -113,9 +119,33 @@ public class ExpServiceNEDT extends Service<Void> {
                 updateMessage("Готов");
                 updateProgress(1, 1);
                 loadnextBDdata();//при загрузке из бд сбрасывает флаг
+                showStatus();
                 return null;
             }
 
+            private void showStatus() {
+                for (ImageView im :
+                        controller.getListView()) {
+                    detectorViewModel.changeIv(im);
+                }
+                int i = 0;
+                if (currentExp.getDir().equals("Прямое") && currentExp.getMode().equals("ВЗН")) {
+                    i = 3;
+                } else if (currentExp.getDir().equals("Обратное") && currentExp.getMode().equals("ВЗН")) {
+                    i = 4;
+                } else if (currentExp.getMode().equals("4-Bypass")) {
+                    i = 5;
+                }
+                int finalI = i;
+                Platform.runLater(() -> {
+                    JFreeChart[] chartViewer = detectorViewModel.getOrder().getChartViewer();
+                    JFreeChart jFreeChart = new ModernChart().startView("Подробный график",
+                            "ЭШРТ выходных каналов", "Каналы", "ЭШРТ, мК",
+                            detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_DatasetNEDT,
+                            detectorViewModel.getExperiment().getDataArrayNEDT());
+                    chartViewer[finalI] = jFreeChart;
+                });
+            }
 
             /**
              * Отработка успешного завершения эксперимента
@@ -342,7 +372,7 @@ public class ExpServiceNEDT extends Service<Void> {
                 }
             }
         } else {
-        //по нулям
+            //по нулям
         }
         Platform.runLater(() -> {
             controller.lab_countDeselPixel.setText(String.valueOf(countDeselPixel));
@@ -516,6 +546,22 @@ public class ExpServiceNEDT extends Service<Void> {
         currentExp.setCountDeselPixel(countDeselPixel);
         currentExp.setCountDeselPixelInLine(maxCountDeselPixelInLine);
         detectorViewModel.setExperiment(currentExp);
+        saveOrderData(currentExp);
+    }
+
+    /**
+     * Сохранение эксперимента для отчета
+     *
+     * @param exp
+     */
+    private void saveOrderData(Experiment exp) {
+        if (exp.getDir().equals("Прямое") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_pr(exp);
+        } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_ob(exp);
+        } else if (exp.getMode().equals("4-Bypass")) {
+            detectorViewModel.getOrder().setBPS(exp);
+        }
     }
 }
 

@@ -6,16 +6,22 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.fx.ChartViewer;
 import ru.pelengator.App;
 import ru.pelengator.DetectorViewModel;
 import ru.pelengator.SecondaryController;
+import ru.pelengator.charts.ModernChart;
 import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.utils.StatisticsUtils;
@@ -23,9 +29,11 @@ import ru.pelengator.utils.StatisticsUtils;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;
+import static ru.pelengator.charts.ModernChart.TIPE_Dataset30_40;
 import static ru.pelengator.utils.Utils.toArrayList;
 
 /**
@@ -70,16 +78,19 @@ public class ExpServiceShum extends Service<Void> {
             protected Void call() throws Exception {
                 //создаем эксперимент
                 if (!detectorViewModel.isRELOADCHARTS()) {//если эксперимент не загружен из базы, то
-                    if(detectorViewModel.getExperiment().getEndExpDate()!=null){
+                    if (detectorViewModel.getExperiment().getEndExpDate() != null && (detectorViewModel.getExperiment()
+                            .getMode().equals(detectorViewModel.getMode())) && (detectorViewModel.getExperiment()
+                            .getDir().equals(detectorViewModel.getDir()))) {
                         currentExp = detectorViewModel.getExperiment();
                         currentExp.setDetectorName(detectorViewModel.getDetectorName());
                         currentExp.setDetectorSerial(detectorViewModel.getNumbersDevises());
                         currentExp.setTesterName(detectorViewModel.getTesterFIO());
                         currentExp.setStartExpDate(new Timestamp(System.currentTimeMillis()));
 
-                    }else{
-                    currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
-                            detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));}
+                    } else {
+                        currentExp = new Experiment(detectorViewModel.getDetectorName(), detectorViewModel.getNumbersDevises(),
+                                detectorViewModel.getTesterFIO(), new Timestamp(System.currentTimeMillis()));
+                    }
                 } else {
                     currentExp = detectorViewModel.getExperiment();
                 }
@@ -94,7 +105,7 @@ public class ExpServiceShum extends Service<Void> {
                 updateMessage("Задание на выборку: " + frame_number + " значений. Каналы: [" + start_ch + "|" + stop_ch + "]");
                 //набор массива кадров
                 if (detectorViewModel.isRELOADCHARTS()) {//в случае загрузки из БД
-                    if (currentExp==null||currentExp.getFrameArrayList30() == null) {
+                    if (currentExp == null || currentExp.getFrameArrayList30() == null) {
                         updateMessage("Нет кадров в БД");
                         updateProgress(1, 1);
                         Platform.runLater(() -> {
@@ -137,6 +148,7 @@ public class ExpServiceShum extends Service<Void> {
                 //Отображаем полученные расчеты
                 showResults();
                 loadnextBDdata();//при загрузке из бд грузит следующий сервис
+                showStatus();
                 return null;
             }
 
@@ -185,10 +197,35 @@ public class ExpServiceShum extends Service<Void> {
         };
     }
 
+    private void showStatus() {
+        for (ImageView im :
+                controller.getListView()) {
+            detectorViewModel.changeIv(im);
+        }
+        int i = 0;
+        if (currentExp.getDir().equals("Прямое") && currentExp.getMode().equals("ВЗН")) {
+            i = 0;
+        } else if (currentExp.getDir().equals("Обратное") && currentExp.getMode().equals("ВЗН")) {
+            i = 1;
+        } else if (currentExp.getMode().equals("4-Bypass")) {
+            i = 2;
+        }
+        int finalI = i;
+        Platform.runLater(() -> {
+            JFreeChart[] chartViewer = detectorViewModel.getOrder().getChartViewer();
+            JFreeChart jFreeChart = new ModernChart().startView("Подробный график",
+                    "Шум по фотоприёмнику", "Каналы", "Шум, мВ",
+                    detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_Dataset30_40,
+                    currentExp.getDataArraySKO30());
+            chartViewer[finalI] = jFreeChart;
+        });
+    }
+
     /**
      * Отображение данных из БД
      */
     private void loadnextBDdata() {
+
         if (detectorViewModel.isRELOADCHARTS()) {
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -289,6 +326,7 @@ public class ExpServiceShum extends Service<Void> {
         //пробегаем по каналам
         for (int i = 0; i < CHANNELNUMBER; i++) {
             dataArraySKO30[i] = dataArrayStat_30[i].getStdDev();
+
         }
     }
 
@@ -441,6 +479,22 @@ public class ExpServiceShum extends Service<Void> {
         saveStendParams(currentExp, detectorViewModel);
         //устанавливаем текущий эксперимент
         detectorViewModel.setExperiment(currentExp);
+        saveOrderData(currentExp);
+    }
+
+    /**
+     * Сохранение эксперимента для отчета
+     *
+     * @param exp
+     */
+    private void saveOrderData(Experiment exp) {
+        if (exp.getDir().equals("Прямое") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_pr(exp);
+        } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_ob(exp);
+        } else if (exp.getMode().equals("4-Bypass")) {
+            detectorViewModel.getOrder().setBPS(exp);
+        }
     }
 
     /**

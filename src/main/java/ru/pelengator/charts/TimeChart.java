@@ -76,7 +76,7 @@ public class TimeChart implements ChartMouseListenerFX {
             renderer.setDrawSeriesLineAsPath(true);
             // set the default stroke for all series
             renderer.setAutoPopulateSeriesStroke(false);
-            renderer.setDefaultStroke(new BasicStroke(3.0f));
+            renderer.setDefaultStroke(new BasicStroke(1.0f));
             renderer.setSeriesPaint(0, Color.RED);
             renderer.setSeriesPaint(1, new Color(24, 123, 58));
         }

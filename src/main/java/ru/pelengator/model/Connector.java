@@ -7,6 +7,7 @@ import ru.pelengator.driver.FT_STATUS;
 import ru.pelengator.driver.Jna2;
 import ru.pelengator.utils.ManualResetEvent;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import static ru.pelengator.PropFile.*;

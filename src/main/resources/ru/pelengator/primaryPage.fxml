@@ -52,7 +52,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfield_nomer_kriost" layoutX="199.0" layoutY="108.0" prefHeight="25.0" prefWidth="185.0" promptText="ЦЖ0001" text="ЦЖ0001" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="tfield_nomer_kriost" layoutX="199.0" layoutY="108.0" prefHeight="25.0" prefWidth="185.0" promptText="ЦЖ0001/LF239" text="ЦЖ0001/LF239" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>

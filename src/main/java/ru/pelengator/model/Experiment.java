@@ -82,7 +82,7 @@ public class Experiment {
 
     private double [] dataArraySred_40;//средний сигнал по каналам при 40
 
-    private static double[] dataArraySKO30; // СКО , шум при 30
+    private double[] dataArraySKO30; // СКО , шум при 30
 
     private double shum; //средний шум по ФПУ//отсчеты
 

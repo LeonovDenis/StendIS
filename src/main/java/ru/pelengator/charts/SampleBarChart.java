@@ -86,4 +86,11 @@ public class SampleBarChart implements ChartMouseListenerFX {
     public static ChartViewer getViewer() {
         return viewer;
     }
+
+    public ChartViewer startView(String winTitle, String title, String xLable, String yLable, Map<String, Number> columnKey) {
+        CategoryDataset dataset = createDataset(columnKey, title);
+        JFreeChart chart = createChart(dataset, title, xLable, yLable);
+        viewer = new ChartViewer(chart);
+        return viewer;
+    }
 }

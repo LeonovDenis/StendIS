@@ -17,16 +17,20 @@ import javafx.stage.Modality;
 import javafx.util.Duration;
 
 import org.decimal4j.util.DoubleRounder;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.ui.RectangleAnchor;
 import org.jfree.chart.ui.TextAnchor;
 import org.jfree.data.time.Second;
+import ru.pelengator.charts.ModernChart;
 import ru.pelengator.charts.TimeChart;
 import ru.pelengator.dao.BDService;
 import ru.pelengator.model.Experiment;
 import ru.pelengator.model.Frame;
 import ru.pelengator.model.Connector;
+import ru.pelengator.model.Order;
 import ru.pelengator.services.*;
 
 
@@ -44,22 +48,24 @@ import static ru.pelengator.PropFile.*;
 import static ru.pelengator.dao.BDService.TypeColums.type_ID;
 
 public class DetectorViewModel {
+    //график наработки
     public static TimeChart timeChart;
     //флаг отправки деселекции
     private static boolean SENDDESEL = true;
     //Flag перегрузки графиков
     private static transient boolean RELOADCHARTS = false;
+    //сценарий вкл/выкл
     private static Thread scenario = new Thread();
-
     //флаг темнового графика. Для отобр кнопок
     private boolean fl_normal = false;
     //блокирующие объектs
     private static Object inBlock = new Object();
-    private static Object narabBlock = new Object();
     //пауза временного графика
     private static int millis_timer_medianChart = 500;
     //ссылка на контроллер
     private final SecondaryController controller;
+    //ссылка на Отчет
+    private static Order order = new Order();
     //Текущий кадр
     private static transient Frame myFrame = new Frame();
 
@@ -75,7 +81,7 @@ public class DetectorViewModel {
     private final transient StringProperty dir = new SimpleStringProperty("Прямое");
     private final transient StringProperty ccc = new SimpleStringProperty("0.2");
 
-    private static byte[] tempMatrix=new byte[144];
+    private static byte[] tempMatrix = new byte[144];
     private static final transient ObjectProperty<byte[]> matrix = new SimpleObjectProperty<>(new byte[LINENUMBER]);
     private transient BooleanProperty reset = new SimpleBooleanProperty(false);
     private transient IntegerProperty vddVddaPower = new SimpleIntegerProperty(0);
@@ -163,6 +169,7 @@ public class DetectorViewModel {
     private long stopNarabTime;//время остановки наработки
     private volatile boolean fl_narab = false;//флаг наработки
     private Thread thread;//поток наработки
+    private boolean done=false;
 
     /**
      * Инициализация
@@ -194,6 +201,7 @@ public class DetectorViewModel {
          * Обработка поля деселекции
          */
         matrixProperty().addListener((observable, oldValue, newValue) -> {
+            done=false;
             for (int i = 0; i < LINENUMBER; i++) {
                 if (oldValue[i] != newValue[i]) {
                     String str = String.valueOf(i + 1);
@@ -220,7 +228,6 @@ public class DetectorViewModel {
                      * Если разрешена отсылка деселекции и режим взн, то отправляем на селектирование
                      */
                     if (SENDDESEL && (findMode()[0] == (byte) 0x00)) {
-
                         int finalI = i;
                         Thread thread = new Thread(() -> new Connector().setDesel(newValue[finalI], finalI));
                         thread.setName("Отработка матрицы");
@@ -230,6 +237,7 @@ public class DetectorViewModel {
                 }
             }
             SENDDESEL = true;
+            done=true;
         });
         /**
          * Обработка типа устройства и установка ID.
@@ -327,31 +335,44 @@ public class DetectorViewModel {
                     b = (byte) 0x00;
                     dir = 0;
                     myMatrix((byte) 0xFF, false);
-                    if(oldValue.equals("1-Bypass")||oldValue.equals("2-Bypass")
-                            ||oldValue.equals("3-Bypass")||oldValue.equals("4-Bypass")){   setPixel(tempMatrix);}
+                    if (oldValue.equals("1-Bypass") || oldValue.equals("2-Bypass")
+                            || oldValue.equals("3-Bypass") || oldValue.equals("4-Bypass")) {
+                        setPixel(tempMatrix);
+                    }
                     break;
                 case "1-Bypass":
                     b = (byte) 0b1 << 4;
                     dir = 0;
-                   if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
+                    if (oldValue.equals("ВЗН")) {
+                        tempMatrix = getMatrix();
+                                            }
                     myMatrix((byte) 0x81, false);
                     break;
                 case "2-Bypass":
                     b = (byte) 0b1 << 4;
                     dir = 0x01 << 3;
-                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
+                    if (oldValue.equals("ВЗН")) {
+
+                        tempMatrix = getMatrix();
+                    }
                     myMatrix((byte) 0x42, false);
                     break;
                 case "3-Bypass":
                     b = (byte) 0b110000;
                     dir = 0;
-                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
+                    if (oldValue.equals("ВЗН")) {
+
+                        tempMatrix = getMatrix();
+                    }
                     myMatrix((byte) 0x24, false);
                     break;
                 case "4-Bypass":
                     b = (byte) 0b110000;
                     dir = 0x01 << 3;
-                    if(oldValue.equals("ВЗН")){ tempMatrix=getMatrix();}
+                    if (oldValue.equals("ВЗН")) {
+
+                        tempMatrix = getMatrix();
+                    }
                     myMatrix((byte) 0x18, false);
                     break;
                 default:
@@ -376,11 +397,11 @@ public class DetectorViewModel {
     ////////////////////////////////////////инициализация сервисов//////////////////////////
 
     /**
-     * инициализация сервиса реконнекта
+     * инициализация сервиса наработки
      */
     private void initNarabThread() {
         thread = new Thread(() -> {
-           StringBuilder sb=new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("[dd.MM] HH:mm");
             timeChart = new TimeChart();
             Platform.runLater(() -> {
@@ -393,11 +414,11 @@ public class DetectorViewModel {
                     controller.getBut_startMKS().fire();
                 });
                 startNarabTime = System.currentTimeMillis();
-                sb.append("\n["+(i+1)+"]"+ "Start "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+                sb.append("\n[" + (i + 1) + "]" + "Start " + simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                 Platform.runLater(() -> {
                     addTimeStamp(sb);
                 });
-                while ((System.currentTimeMillis() - startNarabTime) <= (TimeUnit.MINUTES.toMillis(1))) {
+                while ((System.currentTimeMillis() - startNarabTime) <= (TimeUnit.HOURS.toMillis(8))) {
                     try {
                         java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - startNarabTime);
                         msg = "Работа[" + (i + 1) +
@@ -411,13 +432,8 @@ public class DetectorViewModel {
                         });
 
                         Platform.runLater(() -> controller.getTf_regim().setText(finalMsg));
-                        TimeUnit.SECONDS.sleep(5);
-                        if (!fl_narab) {
-                            synchronized (narabBlock) {
-                                narabBlock.wait();
-                            }
-                        }
-                        if (((System.currentTimeMillis() - startNarabTime) >= (TimeUnit.MINUTES.toMillis(5))) && (fl_on)) {
+                        TimeUnit.MINUTES.sleep(10);
+                        if (((System.currentTimeMillis() - startNarabTime) >= (TimeUnit.MINUTES.toMillis(10))) && (fl_on)) {
                             fl_on = !fl_on;
                             Platform.runLater(() -> controller.getBut_powerOn().fire());
                         }
@@ -428,11 +444,11 @@ public class DetectorViewModel {
                 Platform.runLater(() -> controller.getBut_startMKS().fire());
                 Platform.runLater(() -> controller.getBut_powerOff().fire());
                 stopNarabTime = System.currentTimeMillis();
-                sb.append("\n["+(i+1)+"]"+ "Stop "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+                sb.append("\n[" + (i + 1) + "]" + "Stop " + simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
                 Platform.runLater(() -> {
                     addTimeStamp(sb);
                 });
-                while ((System.currentTimeMillis() - stopNarabTime) <= (TimeUnit.MINUTES.toMillis(1))) {
+                while ((System.currentTimeMillis() - stopNarabTime) <= (TimeUnit.MINUTES.toMillis(30))) {
                     try {
                         java.time.Duration millis = java.time.Duration.ofMillis(System.currentTimeMillis() - stopNarabTime);
                         msg = "Отдых[" + (i + 1) +
@@ -445,12 +461,8 @@ public class DetectorViewModel {
                             timeChart.getDataset().getSeries(1).add(new Second(new Date()), DoubleRounder.round(getFrame_mid() / ONE_K, 3));
                         });
                         Platform.runLater(() -> controller.getTf_regim().setText(finalMsg1));
-                        TimeUnit.SECONDS.sleep(5);
-                        if (!fl_narab) {
-                            synchronized (narabBlock) {
-                                narabBlock.wait();
-                            }
-                        }
+                        TimeUnit.MINUTES.sleep(10);
+
                     } catch (InterruptedException e) {
                         //   ignore
                     }
@@ -461,7 +473,7 @@ public class DetectorViewModel {
             Platform.runLater(() -> {
                 controller.getTf_regim().setText(finalMsg2);
             });
-            sb.append("\nГотово "  + simpleDateFormat.format(new Timestamp(startNarabTime)));
+            sb.append("\nГотово " + simpleDateFormat.format(new Timestamp(System.currentTimeMillis())));
             Platform.runLater(() -> {
                 addTimeStamp(sb);
             });
@@ -471,8 +483,8 @@ public class DetectorViewModel {
 
     private void addTimeStamp(StringBuilder sb) {
         Marker start = new ValueMarker(24);
-        start.setLabelFont(new Font("Dialog",1,12));
-        start.setPaint(new Color(0,0,0, 0));
+        start.setLabelFont(new Font("Dialog", 1, 12));
+        start.setPaint(new Color(0, 0, 0, 0));
         start.setLabel(sb.toString());
         start.setLabelAnchor(RectangleAnchor.BOTTOM_LEFT);
         start.setLabelTextAnchor(TextAnchor.TOP_LEFT);
@@ -832,6 +844,10 @@ public class DetectorViewModel {
             }
             int time = (int) (PAUSE * 2);
             try {
+                Thread thread = new Thread(() -> new Connector().setPower(true));
+                thread.setName("Отработка включение питания");
+                thread.setDaemon(true);
+                thread.start();
                 setIsPowerOn(true);
                 TimeUnit.MILLISECONDS.sleep(time);
                 Platform.runLater(() -> {
@@ -895,6 +911,10 @@ public class DetectorViewModel {
                     VVATiped(0);
                     setVva(0);
                     TimeUnit.MILLISECONDS.sleep(time);
+                    Thread thread = new Thread(() -> new Connector().setPower(false));
+                    thread.setName("Отработка включение питания");
+                    thread.setDaemon(true);
+                    thread.start();
                     setIsPowerOn(false);
                     TimeUnit.MILLISECONDS.sleep(time);
                     setReset(true);
@@ -1047,19 +1067,16 @@ public class DetectorViewModel {
         fl_narab = !fl_narab;
         if (!fl_narab) {//при отмене
             String msg = "";
+            thread.interrupt();
             Platform.runLater(() -> {
                 controller.getBut_startMKS().fire();
                 controller.getTf_regim().setText(msg);
             });
 
         } else {//при старте
-            if (thread.getState() == Thread.State.WAITING) {
-                synchronized (narabBlock) {
-                    narabBlock.notify();
-                }
-            } else if (thread.getState() == Thread.State.NEW){
-                thread.start();
-            }
+            initNarabThread();
+            thread.start();
+
         }
     }
 
@@ -1084,8 +1101,22 @@ public class DetectorViewModel {
 
     //отработка конкретного массива
     public void manual() {
-        setPixel(getMatrix());
+        tempMatrix=getMatrix();
+        myMatrix((byte) 0xFF, false);
+        Thread thread = new Thread(() -> {
+            while (!done) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            setPixel(tempMatrix);
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
+
 
     //стандартный запуск расчета эксперимента
     private void take_NEDT(BarChart<String, Number> barChart_NETD, BarChart<String, Number> barChart_NETD_All) {
@@ -1108,6 +1139,11 @@ public class DetectorViewModel {
     //ресет эксперимента
     public void resetExp() {
         exp_Reset.restart();
+        order=new Order();
+        for (ImageView im:
+                controller.getListView() ) {
+            changeIv(im);
+        }
     }
 
     //обработка кнопки сохранения файла эксперимента
@@ -1134,6 +1170,18 @@ public class DetectorViewModel {
         long l = bDsaveData.takeLastIDFromBD();
         if (ID > l) {
             return false;
+        } else if (ID == 0) {
+            Experiment exp = null;
+            if (getDir().equals("Прямое") && getMode().equals("ВЗН")) {
+                exp = getOrder().getVZN_pr();
+            } else if (getDir().equals("Обратное") && getMode().equals("ВЗН")) {
+                exp = getOrder().getVZN_ob();
+            } else if (getMode().equals("4-Bypass")) {
+                exp = getOrder().getBPS();
+            }
+            setExperiment(exp);
+            refrashCharts();
+            return true;
         } else {
             ArrayList<Experiment> experiments = bDsaveData.readExpFromBD(type_ID, ID);
             if (experiments.size() == 0) {
@@ -1148,6 +1196,7 @@ public class DetectorViewModel {
                 }
             }
         }
+
     }
 
     //запрос последнего ID БД
@@ -1205,7 +1254,7 @@ public class DetectorViewModel {
 
     /**
      * Отработка отображения коннекта к БД
-     * В работе
+     * *
      *
      * @param ap_dbConnect
      */
@@ -1220,6 +1269,86 @@ public class DetectorViewModel {
         Platform.runLater(() -> {
             InputStream resourceAsStream = getClass().getResourceAsStream(finalText);
             ap_dbConnect.setImage(new Image(resourceAsStream));
+        });
+    }
+
+    /**
+     * Отработка отображения выполненных измерений
+     * В работе
+     *
+     * @param imageView
+     */
+    public void changeIv(ImageView imageView) {
+        if (order == null) {
+            return;
+        }
+        String text = "";
+        String id = imageView.getId();
+        boolean status = false;
+        if (id.equals("iv_1_1")) {
+            if (order.getVZN_pr() == null) {
+                status = false;
+            } else if (order.getVZN_pr().getDataArray30() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_1_2")) {
+            if (order.getVZN_ob() == null) {
+                status = false;
+            } else if (order.getVZN_ob().getDataArray30() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_1_3")) {
+            if (order.getBPS() == null) {
+                status = false;
+            } else if (order.getBPS().getDataArray30() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_2_1")) {
+            if (order.getVZN_pr() == null) {
+                status = false;
+            } else if (order.getVZN_pr().getDataArray40() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_2_2")) {
+            if (order.getVZN_ob() == null) {
+                status = false;
+            } else if (order.getVZN_ob().getDataArray40() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_2_3")) {
+            if (order.getBPS() == null) {
+                status = false;
+            } else if (order.getBPS().getDataArray40() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_3_1")) {
+            if (order.getVZN_pr() == null) {
+                status = false;
+            } else if (order.getVZN_pr().getDataArrayNEDT() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_3_2")) {
+            if (order.getVZN_ob() == null) {
+                status = false;
+            } else if (order.getVZN_ob().getDataArrayNEDT() != null) {
+                status = true;
+            }
+        } else if (id.equals("iv_3_3")) {
+            if (order.getBPS() == null) {
+                status = false;
+            } else if (order.getBPS().getDataArrayNEDT() != null) {
+                status = true;
+            }
+        }
+        if (status) {
+            text = "images/yes.png";
+        } else {
+            text = "images/no.png";
+        }
+        String finalText = text;
+        Platform.runLater(() -> {
+            InputStream resourceAsStream = getClass().getResourceAsStream(finalText);
+            imageView.setImage(new Image(resourceAsStream));
         });
     }
     ////////////////////////////////////////геттеры+сеттеры//////////////////////////////////////
@@ -1777,13 +1906,8 @@ public class DetectorViewModel {
         DetectorViewModel.RELOADCHARTS = RELOADCHARTS;
     }
 
-
-    public SearchGoodParamsService getExp_Search() {
-        return exp_Search;
-    }
-
-    public void setExp_Search(SearchGoodParamsService exp_Search) {
-        this.exp_Search = exp_Search;
+    public static Order getOrder() {
+        return order;
     }
 
 }

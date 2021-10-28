@@ -2,7 +2,7 @@
   <configuration default="false" name="App" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="ALTERNATIVE_JRE_PATH" value="BUNDLED" />
     <option name="MAIN_CLASS_NAME" value="ru.pelengator.App" />
-    <module name="StendIS3" />
+    <module name="StendIS" />
     <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Amazon Corretto\javafx-sdk-16\lib&quot; --add-modules javafx.base,javafx.controls,javafx.fxml" />
     <method v="2">
       <option name="Make" enabled="true" />

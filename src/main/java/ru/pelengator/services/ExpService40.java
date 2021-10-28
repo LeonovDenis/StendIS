@@ -11,6 +11,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import ru.pelengator.DetectorViewModel;
@@ -114,7 +115,14 @@ public class ExpService40 extends Service<Void> {
                 }
                 updateProgress(1, 1);
                 loadnextBDdata();//при загрузке из бд грузит следующий сервис
+                showStatus();
                 return null;
+            }
+            private void showStatus() {
+                for (ImageView im:
+                        controller.getListView() ) {
+                    detectorViewModel.changeIv(im);
+                }
             }
 
             /**
@@ -323,6 +331,21 @@ public class ExpService40 extends Service<Void> {
             currentExp.setEndExpDate(new Timestamp(System.currentTimeMillis()));
         }
         detectorViewModel.setExperiment(currentExp);
+        saveOrderData(currentExp);
+    }
+
+    /**
+     * Сохранение эксперимента для отчета
+     * @param exp
+     */
+    private void saveOrderData(Experiment exp) {
+        if (exp.getDir().equals("Прямое") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_pr(exp);
+        } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
+            detectorViewModel.getOrder().setVZN_ob(exp);
+        } else if (exp.getMode().equals("4-Bypass")) {
+            detectorViewModel.getOrder().setBPS(exp);
+        }
     }
 
     /**

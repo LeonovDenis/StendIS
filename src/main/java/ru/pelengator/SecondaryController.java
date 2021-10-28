@@ -34,6 +34,7 @@ import javafx.scene.text.Font;
 import javafx.stage.PopupWindow;
 import javafx.util.StringConverter;
 import javafx.util.converter.*;
+import org.jfree.chart.JFreeChart;
 import ru.pelengator.model.Connector;
 import ru.pelengator.charts.ModernChart;
 import ru.pelengator.charts.SampleBarChart;
@@ -59,6 +60,7 @@ public class SecondaryController {
             category.add(String.valueOf(i + 1));
         }
     }
+
     @FXML
     public
     Button bt_parload;
@@ -257,6 +259,33 @@ public class SecondaryController {
     ImageView ap_dbConnect;
     @FXML
     public
+    ImageView iv_1_1;
+    @FXML
+    public
+    ImageView iv_1_2;
+    @FXML
+    public
+    ImageView iv_1_3;
+    @FXML
+    public
+    ImageView iv_2_1;
+    @FXML
+    public
+    ImageView iv_2_2;
+    @FXML
+    public
+    ImageView iv_2_3;
+    @FXML
+    public
+    ImageView iv_3_1;
+    @FXML
+    public
+    ImageView iv_3_2;
+    @FXML
+    public
+    ImageView iv_3_3;
+    @FXML
+    public
     Button bt_saveOtchet;
 
 
@@ -339,6 +368,8 @@ public class SecondaryController {
     @FXML
     Button but_loadFileExp;
     @FXML
+    Button but_loadExp;
+    @FXML
     ToggleButton tBut_OUT1;
     @FXML
     ToggleButton tBut_OUT2;
@@ -407,8 +438,9 @@ public class SecondaryController {
     //частота получения видео
     @FXML
     private TextField tf_pause_video;
-    private boolean fl_par=false;//парлоад
+    private boolean fl_par = false;//парлоад
     //скорость обновления параметров
+    private static ArrayList<ImageView> listView = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -418,6 +450,19 @@ public class SecondaryController {
         setFrames(App.getLoader());//загрузка графиков и кнопок деселекции
         initHandlers();//инициализация обработчиков
         initBindings();//инициализация связей
+        initPic();
+    }
+
+    private void initPic() {
+        listView.add(iv_1_1);
+        listView.add(iv_1_2);
+        listView.add(iv_1_3);
+        listView.add(iv_2_1);
+        listView.add(iv_2_2);
+        listView.add(iv_2_3);
+        listView.add(iv_3_1);
+        listView.add(iv_3_2);
+        listView.add(iv_3_3);
     }
 
     /**
@@ -486,7 +531,11 @@ public class SecondaryController {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
                     detectorViewModel.allStop();
-                   detectorViewModel.dbIsAlive(ap_dbConnect); //в работе
+                    detectorViewModel.dbIsAlive(ap_dbConnect);
+                    for (ImageView im :
+                            listView) {
+                        detectorViewModel.changeIv(im);
+                    }
                 } else {
                     detectorViewModel.allStart();
                 }
@@ -811,78 +860,120 @@ public class SecondaryController {
     private void initButtons() {
         //обработка сохранения отчета
         bt_saveOtchet.setOnAction(event -> {
-           boolean res=new DocMaker(detectorViewModel).savePDF();
-            checkBT(res, bt_saveOtchet, "Сохранено", "Ошибка");
+            JFreeChart[] chartViewer = detectorViewModel.getOrder().getChartViewer();
+            if (chartViewer[0]!=null&&chartViewer[1]!=null&&chartViewer[2]!=null&&
+                    chartViewer[3]!=null&&chartViewer[4]!=null&&chartViewer[5]!=null) {
+                boolean res = new DocMaker(detectorViewModel).savePDF();
+                checkBT(res, bt_saveOtchet, "Сохранено", "Ошибка");
+
+            }else{
+                checkBT(false, bt_saveOtchet, "Сохранено", "Нет данных");
+            }
+
         });
         //обработка включения всех пикселей
-        but_setAllPixel.setOnAction(event -> {
+        but_setAllPixel.setOnAction(event ->
+
+        {
             detectorViewModel.setAllPixel();
         });
         //обработка выключения всех пикселей
-        but_setNonePixel.setOnAction(event -> {
+        but_setNonePixel.setOnAction(event ->
+
+        {
             detectorViewModel.setNonePixel();
         });
         //обработка пикселей
-        but_setMyPixel.setOnAction(event -> {
-           detectorViewModel.manual();
+        but_setMyPixel.setOnAction(event ->
+
+        {
+            detectorViewModel.manual();
         });
         //обработка выключения линии А
-        but_line_A.setOnAction(event -> {
+        but_line_A.setOnAction(event ->
+
+        {
             detectorViewModel.line_A();
         });
         //обработка выключения линии B
-        but_line_B.setOnAction(event -> {
+        but_line_B.setOnAction(event ->
+
+        {
             detectorViewModel.line_B();
         });
         //обработка выключения линии C
-        but_line_C.setOnAction(event -> {
+        but_line_C.setOnAction(event ->
+
+        {
             detectorViewModel.line_C();
         });
         //обработка выключения линии D
-        but_line_D.setOnAction(event -> {
+        but_line_D.setOnAction(event ->
+
+        {
             detectorViewModel.line_D();
         });
         //обработка выключения линии E
-        but_line_E.setOnAction(event -> {
+        but_line_E.setOnAction(event ->
+
+        {
             detectorViewModel.line_E();
         });
         //обработка выключения линии F
-        but_line_F.setOnAction(event -> {
+        but_line_F.setOnAction(event ->
+
+        {
             detectorViewModel.line_F();
         });
         //обработка выключения линии G
-        but_line_G.setOnAction(event -> {
+        but_line_G.setOnAction(event ->
+
+        {
             detectorViewModel.line_G();
         });
         //обработка выключения линии H
-        but_line_H.setOnAction(event -> {
+        but_line_H.setOnAction(event ->
+
+        {
             detectorViewModel.line_H();
         });
         //обработка кнопки темновой
-        but_setDark.setOnAction(event -> {
+        but_setDark.setOnAction(event ->
+
+        {
             detectorViewModel.setDark(but_setDark);
         });
         //обработка кнопки запроса параметров 1
-        but_param1.setOnAction(event -> {
+        but_param1.setOnAction(event ->
+
+        {
             detectorViewModel.param1();
         });
         //обработка кнопки запроса параметров 2
-        but_param2.setOnAction(event -> {
+        but_param2.setOnAction(event ->
+
+        {
             for (int i = 0; i < 6; i++) {
                 detectorViewModel.param2((byte) i);
             }
         });
         //кнопка реконнекта
-        bt_reconnect.setOnAction(event -> {
+        bt_reconnect.setOnAction(event ->
+
+        {
             detectorViewModel.reconnectDriver();
         });
         //обработка кнопки старта наработки
-        but_regim.setOnAction(event -> {
+        but_regim.setOnAction(event ->
+
+        {
             detectorViewModel.regimService();
         });
 
         //обработка кнопки старта работы МКС
-        but_startMKS.setOnAction(event -> {
+        but_startMKS.setOnAction(event ->
+
+        {
             fl_MKS_Working = !fl_MKS_Working;
             if (fl_MKS_Working) {
                 but_startMKS.setText("Выключить");
@@ -892,12 +983,16 @@ public class SecondaryController {
             detectorViewModel.startMKS(fl_MKS_Working);
         });
         //обработка кнопки ресета графика
-        but_resetBarchart.setOnAction(event -> {
+        but_resetBarchart.setOnAction(event ->
+
+        {
             detectorViewModel.resetBarchart(CHANNEL_START, CHANNEL_STOP);
         });
         ////////////////////////////////////////
         //обработка кнопки старта эксперимента
-        but_start_Shum.setOnAction(event -> {
+        but_start_Shum.setOnAction(event ->
+
+        {
             if (but_start_Shum.getText().startsWith("1.") && but_start_40.getText().startsWith("2.") && but_start_NEDT.getText().startsWith("3.")) {
                 //освобождаем прогресс бар
                 pb_exp.progressProperty().unbind();
@@ -922,7 +1017,9 @@ public class SecondaryController {
         });
 
         //обработка кнопки старта эксперимента
-        but_start_40.setOnAction(event -> {
+        but_start_40.setOnAction(event ->
+
+        {
             if (but_start_Shum.getText().startsWith("1.") && but_start_40.getText().startsWith("2.") && but_start_NEDT.getText().startsWith("3.")) {
                 //освобождаем прогресс бар
                 pb_exp.progressProperty().unbind();
@@ -945,7 +1042,9 @@ public class SecondaryController {
             }
         });
         //обработка кнопки старта эксперимента
-        but_start_NEDT.setOnAction(event -> {
+        but_start_NEDT.setOnAction(event ->
+
+        {
             if (but_start_Shum.getText().startsWith("1.") && but_start_40.getText().startsWith("2.") && but_start_NEDT.getText().startsWith("3.")) {
                 //освобождаем прогресс бар
                 pb_exp.progressProperty().unbind();
@@ -964,7 +1063,9 @@ public class SecondaryController {
             }
         });
         //обработка кнопки сброса эксперимента
-        but_start_RESET.setOnAction(event -> {
+        but_start_RESET.setOnAction(event ->
+
+        {
             //освобождаем прогресс бар
             pb_exp.progressProperty().unbind();
             lab_exp_status.textProperty().unbind();
@@ -985,17 +1086,23 @@ public class SecondaryController {
             detectorViewModel.resetExp();
         });
         //обработка кнопки сохранения файла эксперимента
-        but_saveFileExp.setOnAction(event -> {
+        but_saveFileExp.setOnAction(event ->
+
+        {
             boolean res = detectorViewModel.saveFileExp();
             checkBT(res, but_saveFileExp, "Сохранено", "Ошибка БД");
         });
-        but_updateFileExp.setOnAction(event -> {
+        but_updateFileExp.setOnAction(event ->
+
+        {
             boolean res = detectorViewModel.updateFileExp();
             checkBT(res, but_updateFileExp, "Обновлено", "Ошибка БД");
         });
-        but_loadFileExp.setOnAction(event -> {
+        but_loadFileExp.setOnAction(event ->
+
+        {
             String text;
-            if (tf_IDexp.getText() != null||!tf_IDexp.getText().isEmpty()) {
+            if (tf_IDexp.getText() != null || !tf_IDexp.getText().isEmpty()) {
                 text = tf_IDexp.getText().trim();
             } else {
                 checkBT(false, but_loadFileExp, "", "Укажите ID");
@@ -1011,12 +1118,22 @@ public class SecondaryController {
             boolean res = detectorViewModel.loadFileExp(l);
             checkBT(res, but_loadFileExp, "Загружено", "Ошибка БД");
         });
+        but_loadExp.setOnAction(event ->
+
+        {
+            boolean res = detectorViewModel.loadFileExp(0);
+            checkBT(res, but_loadExp, "Загружено", "Ошибка");
+        });
         //обработка кнопки включения
-        but_powerOn.setOnAction(event -> {
+        but_powerOn.setOnAction(event ->
+
+        {
             detectorViewModel.powerOn(but_powerOn, but_powerOff);
         });
         //обработка кнопки выключения
-        but_powerOff.setOnAction(event -> {
+        but_powerOff.setOnAction(event ->
+
+        {
             detectorViewModel.powerOff(but_powerOn, but_powerOff);
         });
     }
@@ -1387,9 +1504,9 @@ public class SecondaryController {
          * Вызов подробного графика при клике на основной
          */
         stringNumberBarChart.setOnMouseClicked(event -> {
-            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30()!= null)) {
+            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30() != null)) {
                 new ModernChart().start("Подробный график",
-                        "Шум по фотоприёмнику", "Каналы", "Напряжение, мВ",
+                        "Шум по фотоприёмнику", "Каналы", "Шум, мВ",
                         detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_Dataset30_40,
                         detectorViewModel.getExperiment().getDataArraySKO30());
             }
@@ -1455,7 +1572,7 @@ public class SecondaryController {
          * Вызов подробного графика при клике на основной
          */
         stringNumberBarChart.setOnMouseClicked(event -> {
-            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30()!= null)) {
+            if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArraySKO30() != null)) {
                 new ModernChart().start("Подробный график",
                         "Средние значения выходного сигнала", "Каналы", "Напряжение, мВ",
                         detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_Dataset30_40,
@@ -1782,6 +1899,7 @@ public class SecondaryController {
         public String toString(Float value) {
             return String.format("%.2f", value);
         }
+
     }
 
     public BarChart<String, Number> getBarChart_Temp() {
@@ -1830,6 +1948,14 @@ public class SecondaryController {
 
     public void setBut_powerOff(Button but_powerOff) {
         this.but_powerOff = but_powerOff;
+    }
+
+    public static ArrayList<ImageView> getListView() {
+        return listView;
+    }
+
+    public static void setListView(ArrayList<ImageView> listView) {
+        SecondaryController.listView = listView;
     }
 }
 
