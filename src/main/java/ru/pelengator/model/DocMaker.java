@@ -1,6 +1,8 @@
 package ru.pelengator.model;
 
 import at.favre.lib.bytes.Bytes;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
@@ -46,8 +48,8 @@ public class DocMaker {
     PDResources pDResources;
     String fileName = "protokol.pdf";
     String savedFileName = "report.pdf";
-    double koefTerm=2.054;
-    double uTerm=1034;
+    double koefTerm = 2.054;
+    double uTerm = 1034;
 
     public DocMaker(DetectorViewModel detectorViewModel) {
         this.detectorViewModel = detectorViewModel;
@@ -60,6 +62,7 @@ public class DocMaker {
      * @return
      */
     private Map<String, Object> createList() {
+
         Order order = DetectorViewModel.getOrder();
         HashMap<String, Object> hashMap = new HashMap<>();
         //печать серийных номеров
@@ -85,7 +88,7 @@ public class DocMaker {
         hashMap.put("fio", order.getVZN_pr().getTesterName());
         //температура хол зоны
         int temp = order.getVZN_pr().getTemp();
-        int i = (int) (77 + ((uTerm - temp) /koefTerm));
+        int i = (int) (77 + ((uTerm - temp) / koefTerm));
         hashMap.put("temp", String.valueOf(i));
         //режимы+шум+недт
         Experiment exp = null;
@@ -110,10 +113,10 @@ public class DocMaker {
                 }
             }
             try {
-                hashMap.put("vr0_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVr0()*1.0) / ONE_K, 3)));
-                hashMap.put("vva_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVva()*1.0) / ONE_K, 3)));
-                hashMap.put("uc_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVuc()*1.0) / ONE_K, 3)));
-                hashMap.put("vu4_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVu4()*1.0) / ONE_K, 3)));
+                hashMap.put("vr0_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVr0() * 1.0) / ONE_K, 3)));
+                hashMap.put("vva_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVva() * 1.0) / ONE_K, 3)));
+                hashMap.put("uc_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVuc() * 1.0) / ONE_K, 3)));
+                hashMap.put("vu4_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVu4() * 1.0) / ONE_K, 3)));
 
                 hashMap.put("shum_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getShum() * MASHTAB, 3)));
                 hashMap.put("nedt_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getNEDT() * ONE_K, 2)));
@@ -124,6 +127,9 @@ public class DocMaker {
         //обработка деселекции
         setPixelFilds(order, hashMap);
 
+        for (int j = 0; j < 5; j++) {
+            hashMap.put("BP_" + (j), order.getBPS().getMode().substring(0, 1));
+        }
 
         //вставка графиков
         for (int j = 0; j < 6; j++) {
@@ -154,6 +160,7 @@ public class DocMaker {
 
         hashMap.put("chart_4_3", String.valueOf(getCountNEDT(order.getVZN_pr())));
         hashMap.put("chart_5_3", String.valueOf(getCountNEDT(order.getVZN_ob())));
+
 
         return hashMap;
     }
@@ -187,9 +194,9 @@ public class DocMaker {
             }
         }
         hashMap.put("isp_13", String.valueOf(count));
-        if(count<=12){
+        if (count <= 12) {
             hashMap.put("isp_13_1", "Соотв.");
-        }else{
+        } else {
             hashMap.put("isp_13_1", "Не соотв.");
         }
         hashMap.put("isp_10", String.valueOf(count1));
@@ -263,12 +270,12 @@ public class DocMaker {
             ch = String.valueOf(lineP);
         }
         hashMap.put("des_ch_" + (count), ch);
-        hashMap.put("des_line_" + (count), getLINE(lineP,i));
+        hashMap.put("des_line_" + (count), getLINE(lineP, i));
         bitSet.set(id);
         return bitSet;
     }
 
-    private String getLINE(int lineP,int i) {
+    private String getLINE(int lineP, int i) {
         String ret = "";
         String[] strings = {"001000001", "001000011", "001000111", "001001111", "001011111", "001111111", "001111110",
                 "001111100", "001111000", "001110000", "001100000", "001000000", "011000001", "011000011", "011000111",
@@ -281,9 +288,9 @@ public class DocMaker {
                 "000001111", "000011111", "000111111", "000111110", "000111100", "000111000", "000110000", "000100000", "000000000"};
 
         if (i < 72) {
-            ret = "0" + strings[i/2] + "1";
+            ret = "0" + strings[i / 2] + "1";
         } else {
-            ret = "1" + strings[i/2] + "0";
+            ret = "1" + strings[i / 2] + "0";
         }
         return ret;
     }
@@ -299,28 +306,28 @@ public class DocMaker {
             File file = new File(path);
             this.pDDocument = PDDocument.load(file);
             this.pDAcroForm = pDDocument.getDocumentCatalog().getAcroForm();
-            pDResources=pDAcroForm.getDefaultResources();
+            pDResources = pDAcroForm.getDefaultResources();
 
             for (Map.Entry<String, Object> item : map.entrySet()) {
                 String key = item.getKey();
                 PDField field = pDAcroForm.getField(key);
                 if (field != null) {
-                      System.out.print("Form field with placeholder name: '" + key + "' found");
+                    System.out.print("Form field with placeholder name: '" + key + "' found");
 
                     if (field instanceof PDTextField) {
-                    //       System.out.println("(type: " + field.getClass().getSimpleName() + ")");
+                        //       System.out.println("(type: " + field.getClass().getSimpleName() + ")");
                         saveField(key, (String) item.getValue());
-                    //       System.out.println("value is set to: '" + item.getValue() + "'");
+                        //       System.out.println("value is set to: '" + item.getValue() + "'");
 
                     } else if (field instanceof PDPushButton) {
-                   //         System.out.println("(type: " + field.getClass().getSimpleName() + ")");
+                        //         System.out.println("(type: " + field.getClass().getSimpleName() + ")");
                         //    PDPushButton pdPushButton = (PDPushButton) field;
                         saveImage2(key, 4 + Integer.parseInt(String.valueOf(key.charAt(key.length() - 1))), (JFreeChart) item.getValue());
                     } else {
-                    //    System.err.print("Unexpected form field type found with placeholder name: '" + key + "'");
+                        //    System.err.print("Unexpected form field type found with placeholder name: '" + key + "'");
                     }
                 } else {
-                 //   System.err.println("No field found with name:" + key);
+                    //   System.err.println("No field found with name:" + key);
                 }
             }
 
@@ -345,9 +352,9 @@ public class DocMaker {
     public void saveField(String name, String value) throws IOException {
         PDField field = pDAcroForm.getField(name);
         pDAcroForm.setNeedAppearances(true);
-        pDAcroForm.refreshAppearances();
+      //  pDAcroForm.refreshAppearances();
         field.setValue(value);
-        //   System.out.println("saved " + name + ":" + value);
+           System.out.println("saved " + name + ":" + value);
     }
 
     /**
@@ -365,16 +372,16 @@ public class DocMaker {
         PDImageXObject pdImage = PDImageXObject.createFromByteArray(pDDocument, image.toByteArray(),
                 "myImage.jpg");
         setField(pDDocument, name, pageNumb, pdImage);
-       //  System.out.println("Image inserted Successfully.");
+        //  System.out.println("Image inserted Successfully.");
     }
 
     public void saveImage2(String name, int pageNumb, JFreeChart chart) throws IOException {
 
         chart.getPlot().setBackgroundPaint(Color.lightGray);
 
-      //  XYPlot xyPlot = chart.getXYPlot();
-      //  XYItemRenderer renderer = xyPlot.getRenderer();
-      //  renderer.setSeriesPaint(0, Color.BLACK);
+        //  XYPlot xyPlot = chart.getXYPlot();
+        //  XYItemRenderer renderer = xyPlot.getRenderer();
+        //  renderer.setSeriesPaint(0, Color.BLACK);
 
         ByteArrayOutputStream image = new ByteArrayOutputStream();
         ChartUtils.writeChartAsPNG(image, chart, 1600,
@@ -382,7 +389,7 @@ public class DocMaker {
         PDImageXObject pdImage = PDImageXObject.createFromByteArray(pDDocument, image.toByteArray(),
                 "myImage.jpg");
         setField(pDDocument, name, pageNumb, pdImage);
-         //   System.out.println("Image inserted Successfully.");
+        //   System.out.println("Image inserted Successfully.");
     }
 
     /**

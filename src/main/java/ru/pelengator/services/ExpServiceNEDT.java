@@ -266,6 +266,9 @@ public class ExpServiceNEDT extends Service<Void> {
             sb.append("Канал " + (i + 1) + " значение уменьшилось!").append("\n");
             vdelta = -1D;
         }
+        if(dataArraySKO30[i]<=0){
+            dataArraySKO30[i]=ONE_K;
+        }
         double delenie_na_sko = vdelta / dataArraySKO30[i];
         double nedt_po_kanalu = 0D;
         if (vdelta <= 0) {
@@ -526,7 +529,7 @@ public class ExpServiceNEDT extends Service<Void> {
         }
         if (detectorViewModel.getExperiment().getNEDT() > detectorViewModel.getExperiment().getBrakFPUCount()) {
             flaf_ploho = true;
-            String format = String.format("\nФПУ не пригоден!!!!!");
+            String format = String.format("\nПараметры не проходят!!!!!");
             controller.textArea_shum.appendText(format);
         }
         if (countShumyashih == 0) {
