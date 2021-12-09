@@ -27,12 +27,12 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="59.0" prefWidth="157.0" text="ФИО Оператора" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <Label prefHeight="59.0" prefWidth="157.0" text="Тип работ" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfield_FIO" prefHeight="25.0" prefWidth="185.0" promptText="ФИО" text="Оператор" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="tfield_FIO" prefHeight="25.0" prefWidth="185.0" promptText="ФИО" text="Тест" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -52,7 +52,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="tfield_nomer_kriost" layoutX="199.0" layoutY="108.0" prefHeight="25.0" prefWidth="185.0" promptText="ЦЖ0001/LF239" text="ЦЖ0001/LF239" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="tfield_nomer_kriost" layoutX="199.0" layoutY="108.0" prefHeight="25.0" prefWidth="185.0" promptText="ЦЖ0001/LF239" text="ЦЖ0000/LFC000" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
@@ -67,7 +67,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <Label alignment="CENTER" layoutX="26.0" layoutY="45.0" prefHeight="35.0" prefWidth="323.0" text="СПО StendIS v.1.01" textAlignment="CENTER" GridPane.columnSpan="2">
+            <Label alignment="CENTER" layoutX="26.0" layoutY="45.0" prefHeight="35.0" prefWidth="323.0" text="СПО StendIS v.2.01" textAlignment="CENTER" GridPane.columnSpan="2">
                <font>
                   <Font name="System Bold Italic" size="15.0" />
                </font>
