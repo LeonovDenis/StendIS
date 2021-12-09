@@ -42,6 +42,7 @@ import static ru.pelengator.charts.ModernChart.TIPE_DatasetNEDT;
  * Сервис расчета ключевых параметров
  */
 public class ExpServiceNEDT extends Service<Void> {
+    private static final double NEGATIVE_NEDT = 0.1D;
     //ссылки
     private static SecondaryController controller;
     private static DetectorViewModel detectorViewModel;
@@ -133,7 +134,8 @@ public class ExpServiceNEDT extends Service<Void> {
                     i = 3;
                 } else if (currentExp.getDir().equals("Обратное") && currentExp.getMode().equals("ВЗН")) {
                     i = 4;
-                } else if (currentExp.getMode().equals("4-Bypass")) {
+                    // } else if (currentExp.getMode().equals("4-Bypass")) {
+                } else if (currentExp.getMode().endsWith("-Bypass")) {
                     i = 5;
                 }
                 int finalI = i;
@@ -265,7 +267,12 @@ public class ExpServiceNEDT extends Service<Void> {
             vdelta = -1D;
         }
         double delenie_na_sko = vdelta / dataArraySKO30[i];
-        double nedt_po_kanalu = DELTA_TEMP / delenie_na_sko;
+        double nedt_po_kanalu = 0D;
+        if (vdelta <= 0) {
+            nedt_po_kanalu = NEGATIVE_NEDT;
+        } else {
+            nedt_po_kanalu = DELTA_TEMP / delenie_na_sko;
+        }
         return nedt_po_kanalu;
     }
 
@@ -296,11 +303,16 @@ public class ExpServiceNEDT extends Service<Void> {
         for (int i = 0; i < CHANNELNUMBER; i++) {
             dataArrayNEDT[i] = takeNEDT(i, dataArraySred_30, dataArraySred_40, dataArraySKO30);
         }
+        int countNeg = 0;
         for (int i = start_ch - 1; i < stop_ch; i++) {
             double nedt = dataArrayNEDT[i];
-            temp_summaNEDT = temp_summaNEDT + nedt;
+            if (nedt == NEGATIVE_NEDT) {
+                countNeg++;
+            } else {
+                temp_summaNEDT = temp_summaNEDT + nedt;
+            }
         }
-        return temp_summaNEDT / (countChannel);
+        return temp_summaNEDT / (countChannel - countNeg);
     }
 
     /**
@@ -419,17 +431,36 @@ public class ExpServiceNEDT extends Service<Void> {
      * @param detectorViewModel
      */
     private void showCharts(double maxNEDT, int upperBoundNEDT_raspred, int start_ch, int stop_ch, SecondaryController controller, DetectorViewModel detectorViewModel) {
-
-        double upNEDT = (int) ((maxNEDT) * ONE_K) + 5.0D;//верхняя граница НЕДТ
+        double upNEDT;
+        if (maxNEDT >= NEGATIVE_NEDT) {
+            upNEDT = NEGATIVE_NEDT* ONE_K;
+        } else {
+            upNEDT = (int) ((maxNEDT) * ONE_K) + 5.0D;//верхняя граница НЕДТ
+        }
         chartNEDT = controller.getBar_chart_NEDT(App.getLoader(), "vb_netd", 0, upNEDT, (int) upNEDT / 10.0);
         ObservableList<XYChart.Data<String, Number>> dataNEDT_Data = chartNEDT.getData().get(0).getData();
         //перебор данных графика
         //график  недт
-        for (XYChart.Data<String, Number> points : dataNEDT_Data) {
-            if ((Integer.parseInt(points.getXValue()) < start_ch) || (Integer.parseInt(points.getXValue()) > stop_ch)) {
-                points.setYValue(0);
-            } else {
-                points.setYValue(detectorViewModel.getExperiment().getDataArrayNEDT()[Integer.parseInt(points.getXValue()) - 1] * ONE_K);
+        if ((currentExp.getMode().endsWith("-Bypass"))) {//если BYPASS
+            for (XYChart.Data<String, Number> points : dataNEDT_Data) {
+                if ((Integer.parseInt(points.getXValue()) < start_ch) || (Integer.parseInt(points.getXValue()) > stop_ch)) {
+                    points.setYValue(0);
+                } else {
+                    double v = detectorViewModel.getExperiment().getDataArrayNEDT()[Integer.parseInt(points.getXValue()) - 1];
+                    if (v >= NEGATIVE_NEDT) {
+                        points.setYValue(NEGATIVE_NEDT* ONE_K);
+                    } else {
+                        points.setYValue(v * ONE_K);
+                    }
+                }
+            }
+        } else {
+            for (XYChart.Data<String, Number> points : dataNEDT_Data) {
+                if ((Integer.parseInt(points.getXValue()) < start_ch) || (Integer.parseInt(points.getXValue()) > stop_ch)) {
+                    points.setYValue(0);
+                } else {
+                    points.setYValue(detectorViewModel.getExperiment().getDataArrayNEDT()[Integer.parseInt(points.getXValue()) - 1] * ONE_K);
+                }
             }
         }
         /////////////////////////////
@@ -559,7 +590,8 @@ public class ExpServiceNEDT extends Service<Void> {
             detectorViewModel.getOrder().setVZN_pr(exp);
         } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
             detectorViewModel.getOrder().setVZN_ob(exp);
-        } else if (exp.getMode().equals("4-Bypass")) {
+            // } else if (exp.getMode().equals("4-Bypass")) {
+        } else if (exp.getMode().endsWith("-Bypass")) {
             detectorViewModel.getOrder().setBPS(exp);
         }
     }

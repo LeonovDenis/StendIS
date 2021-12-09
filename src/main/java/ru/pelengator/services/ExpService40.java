@@ -343,7 +343,8 @@ public class ExpService40 extends Service<Void> {
             detectorViewModel.getOrder().setVZN_pr(exp);
         } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
             detectorViewModel.getOrder().setVZN_ob(exp);
-        } else if (exp.getMode().equals("4-Bypass")) {
+        //} else if (exp.getMode().equals("4-Bypass")) {
+        } else if (exp.getMode().endsWith("-Bypass")) {
             detectorViewModel.getOrder().setBPS(exp);
         }
     }

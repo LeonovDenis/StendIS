@@ -70,7 +70,7 @@ public class DetectorViewModel {
     private static transient Frame myFrame = new Frame();
 
     ////////////////////////////////////////////параметры прибора//////////////////////////////////////////////
-    private static final transient IntegerProperty vr0 = new SimpleIntegerProperty(1000);
+    private static final transient IntegerProperty vr0 = new SimpleIntegerProperty(950);
     private final transient IntegerProperty vva = new SimpleIntegerProperty(0);
     private final transient IntegerProperty vu4 = new SimpleIntegerProperty(5_000);
     private final transient IntegerProperty vuc = new SimpleIntegerProperty(5_000);
@@ -85,7 +85,7 @@ public class DetectorViewModel {
     private static final transient ObjectProperty<byte[]> matrix = new SimpleObjectProperty<>(new byte[LINENUMBER]);
     private transient BooleanProperty reset = new SimpleBooleanProperty(false);
     private transient IntegerProperty vddVddaPower = new SimpleIntegerProperty(0);
-    private transient IntegerProperty temp = new SimpleIntegerProperty(940);
+    private transient IntegerProperty temp = new SimpleIntegerProperty(918);
     private transient BooleanProperty isScenariyGoing = new SimpleBooleanProperty(false);
     /////////////////////////////
     private static transient IntegerProperty first_ch = new SimpleIntegerProperty(1);
@@ -169,7 +169,7 @@ public class DetectorViewModel {
     private long stopNarabTime;//время остановки наработки
     private volatile boolean fl_narab = false;//флаг наработки
     private Thread thread;//поток наработки
-    private boolean done=false;
+    private boolean done = false;
 
     /**
      * Инициализация
@@ -201,7 +201,7 @@ public class DetectorViewModel {
          * Обработка поля деселекции
          */
         matrixProperty().addListener((observable, oldValue, newValue) -> {
-            done=false;
+            done = false;
             for (int i = 0; i < LINENUMBER; i++) {
                 if (oldValue[i] != newValue[i]) {
                     String str = String.valueOf(i + 1);
@@ -237,7 +237,7 @@ public class DetectorViewModel {
                 }
             }
             SENDDESEL = true;
-            done=true;
+            done = true;
         });
         /**
          * Обработка типа устройства и установка ID.
@@ -345,35 +345,36 @@ public class DetectorViewModel {
                     dir = 0;
                     if (oldValue.equals("ВЗН")) {
                         tempMatrix = getMatrix();
-                                            }
-                    myMatrix((byte) 0x81, false);
+                    }
+                   // myMatrix((byte) 0x81, false);
+                    myMatrix((byte) 0x88, false);
                     break;
                 case "2-Bypass":
                     b = (byte) 0b1 << 4;
                     dir = 0x01 << 3;
                     if (oldValue.equals("ВЗН")) {
-
                         tempMatrix = getMatrix();
                     }
-                    myMatrix((byte) 0x42, false);
+                   // myMatrix((byte) 0x42, false);
+                    myMatrix((byte) 0x44, false);
                     break;
                 case "3-Bypass":
                     b = (byte) 0b110000;
                     dir = 0;
                     if (oldValue.equals("ВЗН")) {
-
                         tempMatrix = getMatrix();
                     }
-                    myMatrix((byte) 0x24, false);
+                    //myMatrix((byte) 0x24, false);
+                    myMatrix((byte) 0x22, false);
                     break;
                 case "4-Bypass":
                     b = (byte) 0b110000;
                     dir = 0x01 << 3;
                     if (oldValue.equals("ВЗН")) {
-
                         tempMatrix = getMatrix();
                     }
-                    myMatrix((byte) 0x18, false);
+                    //myMatrix((byte) 0x18, false);
+                    myMatrix((byte) 0x11, false);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + newValue);
@@ -598,13 +599,13 @@ public class DetectorViewModel {
      * обработка время интегрирования
      */
     public void TINTTiped(Integer value) {
-        if ((value >= 18) && (value <= 10_000)) {
+        if ((value >= 0) && (value <= 10_000)) {
             Thread thread = new Thread(() -> new Connector().setIntTime(value));
             thread.setName("Отработка интегрирования");
             thread.setDaemon(true);
             thread.start();
         } else {
-            showAlert("Введено неправильное время интегрирования: " + value + " мc", "Допустимый диапазон от 18 до 10000 мс", 0);
+            showAlert("Введено неправильное время интегрирования: " + value + " мc", "Допустимый диапазон от 0 до 10000 мс", 0);
         }
     }
 
@@ -871,8 +872,8 @@ public class DetectorViewModel {
                 });
                 TimeUnit.MILLISECONDS.sleep(time);
                 Platform.runLater(() -> {
-                    VR0Tiped(1000);
-                    setVr0(1000);
+                    VR0Tiped(950);
+                    setVr0(950);
                 });
                 TimeUnit.MILLISECONDS.sleep(time);
                 setMode("ВЗН");
@@ -1101,7 +1102,7 @@ public class DetectorViewModel {
 
     //отработка конкретного массива
     public void manual() {
-        tempMatrix=getMatrix();
+        tempMatrix = getMatrix();
         myMatrix((byte) 0xFF, false);
         Thread thread = new Thread(() -> {
             while (!done) {
@@ -1139,9 +1140,9 @@ public class DetectorViewModel {
     //ресет эксперимента
     public void resetExp() {
         exp_Reset.restart();
-        order=new Order();
-        for (ImageView im:
-                controller.getListView() ) {
+        order = new Order();
+        for (ImageView im :
+                controller.getListView()) {
             changeIv(im);
         }
     }
@@ -1176,7 +1177,8 @@ public class DetectorViewModel {
                 exp = getOrder().getVZN_pr();
             } else if (getDir().equals("Обратное") && getMode().equals("ВЗН")) {
                 exp = getOrder().getVZN_ob();
-            } else if (getMode().equals("4-Bypass")) {
+                //} else if (getMode().equals("4-Bypass")) {
+            } else if (getMode().endsWith("-Bypass")) {
                 exp = getOrder().getBPS();
             }
             setExperiment(exp);

@@ -110,10 +110,10 @@ public class DocMaker {
                 }
             }
             try {
-                hashMap.put("vr0_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getVr0() / ONE_K, 3)));
-                hashMap.put("vva_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getVva() / ONE_K, 3)));
-                hashMap.put("uc_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getVuc() / ONE_K, 3)));
-                hashMap.put("vu4_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getVu4() / ONE_K, 3)));
+                hashMap.put("vr0_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVr0()*1.0) / ONE_K, 3)));
+                hashMap.put("vva_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVva()*1.0) / ONE_K, 3)));
+                hashMap.put("uc_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVuc()*1.0) / ONE_K, 3)));
+                hashMap.put("vu4_" + (j + 1), String.valueOf(DoubleRounder.round((exp.getVu4()*1.0) / ONE_K, 3)));
 
                 hashMap.put("shum_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getShum() * MASHTAB, 3)));
                 hashMap.put("nedt_" + (j + 1), String.valueOf(DoubleRounder.round(exp.getNEDT() * ONE_K, 2)));

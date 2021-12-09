@@ -39,11 +39,12 @@ public class PrimaryController {
     @FXML
     public
     Button b_start;
+
     @FXML
     private void initialize() {
 
-      //  tfield_CRC32.setText(Long.toHexString(calculate()).toUpperCase());//расчет контр суммы
-        tfield_CRC32.setText("3FA87FEC");
+        tfield_CRC32.setText(Long.toHexString(calculate()).toUpperCase());//расчет контр суммы
+        //  tfield_CRC32.setText("3FA87FEC");
         createBatLoader();//создание загрузчиков
         /**
          *обработка нажатия кнопки окна
@@ -60,7 +61,7 @@ public class PrimaryController {
                 Stage stage = App.getPrimaryStage();
                 stage.hide();
                 stage.setScene(scene);
-                setOnMidl(stage,scene);
+                setOnMidl(stage, scene);
                 stage.show();
                 //отработка закрытия окна
                 stage.setOnCloseRequest(t -> {
@@ -123,11 +124,11 @@ public class PrimaryController {
      *
      * @param stage
      */
-    private void setOnMidl(Stage stage,Scene scene) {
+    private void setOnMidl(Stage stage, Scene scene) {
         stage.setY(0d);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double widthScreen = screenSize.getWidth();
-               stage.setX(widthScreen-1000-30);
+        stage.setX(widthScreen - 1000 - 30);
     }
 
     /**
@@ -151,7 +152,7 @@ public class PrimaryController {
                 cs.update(buf, 0, nLength);
             }
         } catch (IOException e) {
-          //ignore
+            //ignore
         }
         s = cs.getValue();
         return s;

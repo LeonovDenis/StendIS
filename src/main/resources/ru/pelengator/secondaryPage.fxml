@@ -124,22 +124,22 @@
                                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                          </rowConstraints>
                                                          <children>
-                                                            <Label text="1" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                                                            <Label text="4" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                                                                <font>
                                                                   <Font size="9.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label layoutX="15.0" layoutY="11.0" text="2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                                                            <Label layoutX="15.0" layoutY="11.0" text="3" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                                                                <font>
                                                                   <Font size="9.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label layoutX="15.0" layoutY="23.0" text="3" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                                                            <Label layoutX="15.0" layoutY="23.0" text="2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                                                                <font>
                                                                   <Font size="9.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label layoutX="15.0" layoutY="34.0" text="4" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                                                            <Label layoutX="15.0" layoutY="34.0" text="1" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                                                                <font>
                                                                   <Font size="9.0" />
                                                                </font>
@@ -433,7 +433,7 @@
                                                                </GridPane.margin>
                                                             </Button>
                                                             <Button fx:id="bt_reconnect" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Реконнект" GridPane.columnIndex="2" GridPane.rowIndex="21" />
-                                                            <TextField fx:id="tf_tSence" alignment="CENTER" layoutX="201.0" layoutY="119.0" promptText="900-970" text="940" GridPane.columnIndex="2" GridPane.rowIndex="16">
+                                                            <TextField fx:id="tf_tSence" alignment="CENTER" layoutX="201.0" layoutY="119.0" promptText="900-970" text="918" GridPane.columnIndex="2" GridPane.rowIndex="16">
                                                                <GridPane.margin>
                                                                   <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                                                                </GridPane.margin></TextField>

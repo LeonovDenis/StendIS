@@ -30,10 +30,12 @@ import org.jfree.data.xy.XYSeriesCollection;
  * Класс вспомогательных графиков
  */
 public class ModernChart {
+
     static JFreeChart charttt;
     public static final int TIPE_Dataset30_40 = 0;
     public static final int TIPE_DatasetNEDT = 1;
     public static final int TIPE_DatasetNEDT_RASP = 2;
+
     /**
      * Вложенный класс панели графика
      */
@@ -43,6 +45,7 @@ public class ModernChart {
         private Crosshair xCrosshair;//перекрестие
         private Crosshair yCrosshair;//перекрестие
         private Crosshair yCrosshair2;//перекрестие
+        private boolean FL_BPS=true;
 
         /**
          * Конструктор
@@ -60,12 +63,13 @@ public class ModernChart {
             if (tipe == TIPE_Dataset30_40) {
                 dataset = createDataset30_40(start, end, mass);
             } else if (tipe == TIPE_DatasetNEDT) {
+                FL_BPS=false;
                 dataset = createDatasetNEDT(start, end, mass);
             } else if (tipe == TIPE_DatasetNEDT_RASP) {
                 dataset = createDatasetNEDT_RASP(start, end, mass);
             }
             JFreeChart chart = createChart(dataset, title, xLable, yLable);
-            charttt=chart;
+            charttt = chart;
             XYPlot xyPlot = chart.getXYPlot();
             if (tipe == TIPE_DatasetNEDT_RASP) {
                 xyPlot.getDomainAxis().setLowerBound(start - ((mass[0].length - 1) / 2) - 10);
@@ -111,7 +115,10 @@ public class ModernChart {
             this.yCrosshair.setLabelBackgroundPaint(new Color(0, 0, 0, 0));
             crosshairOverlay.addDomainCrosshair(xCrosshair);
             crosshairOverlay.addRangeCrosshair(yCrosshair);
-            crosshairOverlay.addRangeCrosshair(yCrosshair2);
+           if (FL_BPS){
+               crosshairOverlay.addRangeCrosshair(yCrosshair2);
+           }
+
             Platform.runLater(() -> {
                 this.chartViewer.getCanvas().addOverlay(crosshairOverlay);
             });
@@ -138,7 +145,7 @@ public class ModernChart {
             this.xCrosshair.setValue((int) x);
             this.yCrosshair.setValue(y);
 
-            if (plot.getDataset().getSeriesCount() == 2) {
+            if ((plot.getDataset().getSeriesCount() == 2)&&FL_BPS) {
                 double y2 = DatasetUtils.findYValue(plot.getDataset(), 1, (int) x);
                 this.yCrosshair2.setValue(y2);
             }
@@ -189,13 +196,25 @@ public class ModernChart {
             if (a == null) {
                 return dataset;
             }
-            XYSeries series = new XYSeries(" ЭШРТ");
+            XYSeries series = new XYSeries(" Нечетные каналы");
+            XYSeries series1 = new XYSeries(" Четные каналы");
+            double v = 0;
             for (int x = start - 1; x < end; x++) {
-                double v = a[x] * 1000;
+                if (a[x] >= 0.1D) {
+                    v = 100D;
+                } else {
+                    v = a[x] * 1000;
+                }
                 double round = DoubleRounder.round(v, 3);
-                series.add(x + 1, round);
+                if(x%2==0){
+                    series.add(x + 1, round);
+                }else{
+                    series1.add(x + 1, round);
+                }
+
             }
             dataset.addSeries(series);
+            dataset.addSeries(series1);
         }
         return dataset;
     }
@@ -261,7 +280,7 @@ public class ModernChart {
     public JFreeChart startView(String winTitle, String title, String xLable, String yLable, int start, int end, int tipe, double[]... mass) {
         MyPane myPane = new MyPane(title, xLable, yLable, start, end, tipe, mass);
 
-       return getCharttt();
+        return getCharttt();
     }
 
     public static JFreeChart getCharttt() {
