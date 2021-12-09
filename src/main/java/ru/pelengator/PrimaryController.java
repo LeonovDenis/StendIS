@@ -54,8 +54,8 @@ public class PrimaryController {
 
             if (tfield_FPU.getText().trim().equals(DETECTORNAME)) {
                 ScrollPane scrollPane = new ScrollPane();
-                scrollPane.setPrefViewportHeight(500);
-                scrollPane.setPrefViewportWidth(1000);
+                scrollPane.setPrefViewportHeight(900);
+                scrollPane.setPrefViewportWidth(1600);
                 scrollPane.setContent(App.getRoot());
                 Scene scene = new Scene(scrollPane);
                 Stage stage = App.getPrimaryStage();
@@ -63,6 +63,7 @@ public class PrimaryController {
                 stage.setScene(scene);
                 setOnMidl(stage, scene);
                 stage.show();
+
                 //отработка закрытия окна
                 stage.setOnCloseRequest(t -> {
                     Connector.driver2.close();
@@ -125,10 +126,10 @@ public class PrimaryController {
      * @param stage
      */
     private void setOnMidl(Stage stage, Scene scene) {
-        stage.setY(0d);
+        stage.setY(30);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double widthScreen = screenSize.getWidth();
-        stage.setX(widthScreen - 1000 - 30);
+        stage.setX(widthScreen - 1600 - 30);
     }
 
     /**
