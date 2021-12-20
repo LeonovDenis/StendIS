@@ -1636,7 +1636,7 @@ public class SecondaryController {
         stringNumberBarChart.setOnMouseClicked(event -> {
             if ((detectorViewModel.getExperiment() != null) && (detectorViewModel.getExperiment().getDataArrayNEDT() != null)) {
                 new ModernChart().start("Подробный график",
-                        "ЭШРТ выходных каналов", "Каналы", "ЭШРТ, мК",
+                        "ЭШРТ каналов", "Каналы", "ЭШРТ, мК",
                         detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_DatasetNEDT,
                         detectorViewModel.getExperiment().getDataArrayNEDT());
             }
@@ -1719,7 +1719,7 @@ public class SecondaryController {
         }
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Вся шкала 1 мин");
+        //xAxis.setLabel("Вся шкала 1 мин");
         xAxis.setAnimated(false);
         yAxis.setLabel("Значение, мВ");
         yAxis.setAnimated(false);
@@ -1735,12 +1735,12 @@ public class SecondaryController {
         XYChart.Series<String, Number> ser_sred = new XYChart.Series<>();
         XYChart.Series<String, Number> ser_max = new XYChart.Series<>();
         XYChart.Series<String, Number> ser_min = new XYChart.Series<>();
-        XYChart.Series<String, Number> ser_sko = new XYChart.Series<>();
+       // XYChart.Series<String, Number> ser_sko = new XYChart.Series<>();
         ser_sred.setName("Среднее значение");
-        ser_max.setName("Максимальное значение");
+        ser_max.setName("Максимальное значение   ");
         ser_min.setName("Минимальное значение");
-        ser_sko.setName("Среднеквадратичное отклонение");
-        lineChart.getData().addAll(ser_sred, ser_max, ser_min, ser_sko);
+       // ser_sko.setName("Среднеквадратичное отклонение");
+        lineChart.getData().addAll(ser_sred, ser_max, ser_min/*, ser_sko*/);
         nm.getChildren().add(lineChart);
         return lineChart;
     }

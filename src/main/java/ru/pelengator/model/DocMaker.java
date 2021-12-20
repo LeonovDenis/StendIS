@@ -32,9 +32,7 @@ import java.awt.*;
 import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ru.pelengator.App.loadFilePath;
 import static ru.pelengator.PropFile.MASHTAB;
@@ -50,6 +48,7 @@ public class DocMaker {
     String savedFileName = "report.pdf";
     double koefTerm = 2.054;
     double uTerm = 1034;
+    int[] numbers = new int[288];
 
     public DocMaker(DetectorViewModel detectorViewModel) {
         this.detectorViewModel = detectorViewModel;
@@ -127,7 +126,7 @@ public class DocMaker {
         //обработка деселекции
         setPixelFilds(order, hashMap);
 
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < 6; j++) {
             hashMap.put("BP_" + (j), order.getBPS().getMode().substring(0, 1));
         }
 
@@ -170,26 +169,17 @@ public class DocMaker {
         int count = 0;
         int count1 = 0;
         int count2 = 0;
+        int count3 = 0;
         for (int i = 0; i < 144; i++) {
             Bytes bytee = Bytes.from(matrix[i]);
             BitSet bitSet = bytee.toBitSet();
             int cardinality = bitSet.cardinality();
             if (cardinality < 8) {
-
-                if (cardinality == 7) {
-                    count1++;
-                    //один пиксель
+                for (int j = 0; j < 8 - cardinality; j++) {
                     count++;
-                    pf(i, bitSet, count, hashMap);
-                }
-                if (cardinality == 6) {
-                    count2++;
-                    //два пикселя
-                    for (int j = 0; j < 2; j++) {
-                        count++;
-                        BitSet pf = pf(i, bitSet, count, hashMap);
-                        bitSet = pf;
-                    }
+                    BitSet pf = pf(i, bitSet, count, hashMap);
+                    bitSet = pf;
+
                 }
             }
         }
@@ -199,10 +189,26 @@ public class DocMaker {
         } else {
             hashMap.put("isp_13_1", "Не соотв.");
         }
+        for (int i = 0; i < 288; i++) {
+           if( numbers[i]==1){
+               count1++;
+           }
+            if( numbers[i]==2){
+                count2++;
+            }
+            if( numbers[i]>=3){
+                count3++;
+            }
+        }
+
         hashMap.put("isp_10", String.valueOf(count1));
         hashMap.put("isp_11", String.valueOf(count2));
-        hashMap.put("isp_12", "0");
-        hashMap.put("isp_12_1", "Соотв.");
+        hashMap.put("isp_12", String.valueOf(count3));
+        if (count3 <= 0) {
+            hashMap.put("isp_12_1", "Соотв.");
+        } else {
+            hashMap.put("isp_12_1", "Не соотв.");
+        }
     }
 
     private BitSet pf(int i, BitSet bitSet, int count, HashMap<String, Object> hashMap) {
@@ -234,22 +240,22 @@ public class DocMaker {
             koef = 0;
             id = 4;
         } else if (!bitSet.get(3)) {
-            num = "4";
+            num = "1";
             pix = "11101111";
             koef = 1;
             id = 3;
         } else if (!bitSet.get(2)) {
-            num = "3";
+            num = "2";
             pix = "11011111";
             koef = 1;
             id = 2;
         } else if (!bitSet.get(1)) {
-            num = "2";
+            num = "3";
             pix = "10111111";
             koef = 1;
             id = 1;
         } else if (!bitSet.get(0)) {
-            num = "1";
+            num = "4";
             pix = "01111111";
             koef = 1;
             id = 0;
@@ -262,6 +268,7 @@ public class DocMaker {
             sec = "B";
         }
         hashMap.put("des_sec_" + (count), sec);
+
         if (koef == 0) {
             lineP = (i * 2 + 1);
             ch = String.valueOf(lineP);
@@ -269,7 +276,9 @@ public class DocMaker {
             lineP = (i * 2 + 2);
             ch = String.valueOf(lineP);
         }
+
         hashMap.put("des_ch_" + (count), ch);
+        numbers[lineP-1]++;
         hashMap.put("des_line_" + (count), getLINE(lineP, i));
         bitSet.set(id);
         return bitSet;
@@ -312,7 +321,7 @@ public class DocMaker {
                 String key = item.getKey();
                 PDField field = pDAcroForm.getField(key);
                 if (field != null) {
-                    System.out.print("Form field with placeholder name: '" + key + "' found");
+                    //  System.out.print("Form field with placeholder name: '" + key + "' found");
 
                     if (field instanceof PDTextField) {
                         //       System.out.println("(type: " + field.getClass().getSimpleName() + ")");
@@ -352,9 +361,9 @@ public class DocMaker {
     public void saveField(String name, String value) throws IOException {
         PDField field = pDAcroForm.getField(name);
         pDAcroForm.setNeedAppearances(true);
-      //  pDAcroForm.refreshAppearances();
+        //  pDAcroForm.refreshAppearances();
         field.setValue(value);
-           System.out.println("saved " + name + ":" + value);
+        //   System.out.println("saved " + name + ":" + value);
     }
 
     /**

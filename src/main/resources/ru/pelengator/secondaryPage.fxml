@@ -29,7 +29,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.SecondaryController">
+<AnchorPane prefHeight="900.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.pelengator.SecondaryController">
    <children>
       <BorderPane layoutX="135.0" layoutY="99.0" prefHeight="900.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -839,7 +839,7 @@
                                           <Insets left="5.0" />
                                        </GridPane.margin></Label>
                                     <Label fx:id="lab_sred40" alignment="CENTER" layoutX="146.0" layoutY="50.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="---" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Label layoutX="10.0" layoutY="105.0" prefHeight="18.0" prefWidth="215.0" text="Кол. деселектир. элем. по ФПУ" GridPane.rowIndex="5">
+                                    <Label layoutX="10.0" layoutY="105.0" prefHeight="18.0" prefWidth="215.0" text="Кол. деселектир. элемементов" GridPane.rowIndex="5">
                                        <GridPane.margin>
                                           <Insets left="5.0" />
                                        </GridPane.margin></Label>

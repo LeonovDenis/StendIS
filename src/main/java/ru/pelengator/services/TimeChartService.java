@@ -28,7 +28,7 @@ public class TimeChartService extends ScheduledService<Void> {
     private static FloatProperty srednee = new SimpleFloatProperty(0);
     private static FloatProperty max = new SimpleFloatProperty(0);
     private static FloatProperty min = new SimpleFloatProperty(0);
-    private static FloatProperty sko = new SimpleFloatProperty(0);
+  //  private static FloatProperty sko = new SimpleFloatProperty(0);
 
 
     public TimeChartService(SecondaryController controller, DetectorViewModel detectorViewModel, int pause) {
@@ -37,7 +37,7 @@ public class TimeChartService extends ScheduledService<Void> {
         srednee.bind(detectorViewModel.frame_midProperty());
         max.bind(detectorViewModel.frame_maxProperty());
         min.bind(detectorViewModel.frame_minProperty());
-        sko.bind(detectorViewModel.frame_SKOProperty());
+   //     sko.bind(detectorViewModel.frame_SKOProperty());
     }
 
     @Override
@@ -51,20 +51,20 @@ public class TimeChartService extends ScheduledService<Void> {
                     XYChart.Data<String, Number> data_sred = new XYChart.Data<>(str_date, getSrednee());//создаем данные
                     XYChart.Data<String, Number> data_max = new XYChart.Data<>(str_date, getMax());//создаем данные
                     XYChart.Data<String, Number> data_min = new XYChart.Data<>(str_date, getMin());//создаем данные
-                    XYChart.Data<String, Number> data_sko = new XYChart.Data<>(str_date, getSko());//создаем данные
+                 //   XYChart.Data<String, Number> data_sko = new XYChart.Data<>(str_date, getSko());//создаем данные
 
                     Platform.runLater(() -> {
                         controller.getLineChart_time().getData().get(0).getData().add(data_sred);//добавляем данные в график
                         controller.getLineChart_time().getData().get(1).getData().add(data_max);//добавляем данные в график
                         controller.getLineChart_time().getData().get(2).getData().add(data_min);//добавляем данные в график
-                        controller.getLineChart_time().getData().get(3).getData().add(data_sko);//добавляем данные в график
+                //        controller.getLineChart_time().getData().get(3).getData().add(data_sko);//добавляем данные в график
 
                         //при переполнении графика удаляем первое значение
                         if (controller.getLineChart_time().getData().get(0).getData().size() > WINDOW_SIZE) {
                             controller.getLineChart_time().getData().get(0).getData().remove(0);
                             controller.getLineChart_time().getData().get(1).getData().remove(0);
                             controller.getLineChart_time().getData().get(2).getData().remove(0);
-                            controller.getLineChart_time().getData().get(3).getData().remove(0);
+                 //           controller.getLineChart_time().getData().get(3).getData().remove(0);
                         }
                     });
                 }
@@ -85,7 +85,7 @@ public class TimeChartService extends ScheduledService<Void> {
         return min.get();
     }
 
-    public static float getSko() {
+ /**   public static float getSko() {
         return sko.get();
-    }
+    }*/
 }

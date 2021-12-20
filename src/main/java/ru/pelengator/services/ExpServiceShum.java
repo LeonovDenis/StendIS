@@ -207,7 +207,7 @@ public class ExpServiceShum extends Service<Void> {
             i = 0;
         } else if (currentExp.getDir().equals("Обратное") && currentExp.getMode().equals("ВЗН")) {
             i = 1;
-       // } else if (currentExp.getMode().equals("4-Bypass")) {
+            // } else if (currentExp.getMode().equals("4-Bypass")) {
         } else if (currentExp.getMode().endsWith("-Bypass")) {
             i = 2;
         }
@@ -253,7 +253,11 @@ public class ExpServiceShum extends Service<Void> {
         start_ch = detectorViewModel.getFirstChanExp();
         stop_ch = detectorViewModel.getLastChanExp();
         frame_number = detectorViewModel.getFrameCountExp();
-        matrix = detectorViewModel.getMatrix();
+        if (detectorViewModel.getMode().equals("ВЗН")) {
+            matrix = detectorViewModel.getMatrix();
+        } else {
+            matrix = detectorViewModel.getTempMatrix();
+        }
         countChannel = stop_ch - start_ch + 1;
         brakTimes = Double.parseDouble(controller.tex_brak.getText());
         ////////////////////////кол. канал////кол кадров///
@@ -493,7 +497,7 @@ public class ExpServiceShum extends Service<Void> {
             detectorViewModel.getOrder().setVZN_pr(exp);
         } else if (exp.getDir().equals("Обратное") && exp.getMode().equals("ВЗН")) {
             detectorViewModel.getOrder().setVZN_ob(exp);
-       // } else if (exp.getMode().equals("4-Bypass")) {
+            // } else if (exp.getMode().equals("4-Bypass")) {
         } else if (exp.getMode().endsWith("-Bypass")) {
             detectorViewModel.getOrder().setBPS(exp);
         }

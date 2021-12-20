@@ -142,7 +142,7 @@ public class ExpServiceNEDT extends Service<Void> {
                 Platform.runLater(() -> {
                     JFreeChart[] chartViewer = detectorViewModel.getOrder().getChartViewer();
                     JFreeChart jFreeChart = new ModernChart().startView("Подробный график",
-                            "ЭШРТ выходных каналов", "Каналы", "ЭШРТ, мК",
+                            "ЭШРТ каналов", "Каналы", "ЭШРТ, мК",
                             detectorViewModel.getFirstChanExp(), detectorViewModel.getLastChanExp(), TIPE_DatasetNEDT,
                             detectorViewModel.getExperiment().getDataArrayNEDT());
                     chartViewer[finalI] = jFreeChart;
@@ -266,8 +266,8 @@ public class ExpServiceNEDT extends Service<Void> {
             sb.append("Канал " + (i + 1) + " значение уменьшилось!").append("\n");
             vdelta = -1D;
         }
-        if(dataArraySKO30[i]<=0){
-            dataArraySKO30[i]=ONE_K;
+        if (dataArraySKO30[i] <= 0) {
+            dataArraySKO30[i] = ONE_K;
         }
         double delenie_na_sko = vdelta / dataArraySKO30[i];
         double nedt_po_kanalu = 0D;
@@ -374,22 +374,53 @@ public class ExpServiceNEDT extends Service<Void> {
     private void takeCountOfPixelAndShow() {
         countDeselPixel = 0;
         maxCountDeselPixelInLine = 0;
+        byte[] matrix = currentExp.getMatrix();
         if (currentExp.getMode().equals("ВЗН")) {
-            byte[] matrix = currentExp.getMatrix();
             for (byte b :
                     matrix) {
                 BitSet bitSet = Bytes.from(b).toBitSet();
-                int cardinality = bitSet.cardinality();
-                if (cardinality < 8) {
-                    countDeselPixel = countDeselPixel + (8 - cardinality);
-                    if (maxCountDeselPixelInLine < (8 - cardinality))
-                        maxCountDeselPixelInLine = (8 - cardinality);
+                int tempCount = 0;
+                for (int i = 0; i < 4; i++) {
+                    if (!bitSet.get(7 - i)) {
+                        countDeselPixel++;
+                        tempCount++;
+                    }
+
                 }
+                if (maxCountDeselPixelInLine < tempCount)
+                    maxCountDeselPixelInLine = tempCount;
+                tempCount = 0;
+                for (int i = 4; i < 8; i++) {
+                    if (!bitSet.get(7 - i)) {
+                        countDeselPixel++;
+                        tempCount++;
+                    }
+                }
+                if (maxCountDeselPixelInLine < tempCount)
+                    maxCountDeselPixelInLine = tempCount;
             }
         } else {
-            //по нулям
+
+            String stroka = currentExp.getMode().substring(0, 1);
+            int istr_num = Integer.parseInt(stroka);
+            for (byte b :
+                    matrix) {
+                BitSet bitSet = Bytes.from(b).toBitSet();
+
+                if (!bitSet.get(8 - istr_num)) {
+                    countDeselPixel++;
+                }
+                if (!bitSet.get(4 - istr_num)) {
+                    countDeselPixel++;
+                }
+            }
+            if (countDeselPixel > 0) {
+                maxCountDeselPixelInLine = 1;
+            }
         }
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+
+        {
             controller.lab_countDeselPixel.setText(String.valueOf(countDeselPixel));
             controller.lab_countDeselPixelInLine.setText(String.valueOf(maxCountDeselPixelInLine));
             if (countDeselPixel <= 12) {
@@ -436,7 +467,7 @@ public class ExpServiceNEDT extends Service<Void> {
     private void showCharts(double maxNEDT, int upperBoundNEDT_raspred, int start_ch, int stop_ch, SecondaryController controller, DetectorViewModel detectorViewModel) {
         double upNEDT;
         if (maxNEDT >= NEGATIVE_NEDT) {
-            upNEDT = NEGATIVE_NEDT* ONE_K;
+            upNEDT = NEGATIVE_NEDT * ONE_K;
         } else {
             upNEDT = (int) ((maxNEDT) * ONE_K) + 5.0D;//верхняя граница НЕДТ
         }
@@ -451,7 +482,7 @@ public class ExpServiceNEDT extends Service<Void> {
                 } else {
                     double v = detectorViewModel.getExperiment().getDataArrayNEDT()[Integer.parseInt(points.getXValue()) - 1];
                     if (v >= NEGATIVE_NEDT) {
-                        points.setYValue(NEGATIVE_NEDT* ONE_K);
+                        points.setYValue(NEGATIVE_NEDT * ONE_K);
                     } else {
                         points.setYValue(v * ONE_K);
                     }

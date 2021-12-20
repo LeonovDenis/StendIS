@@ -115,9 +115,9 @@ public class ModernChart {
             this.yCrosshair.setLabelBackgroundPaint(new Color(0, 0, 0, 0));
             crosshairOverlay.addDomainCrosshair(xCrosshair);
             crosshairOverlay.addRangeCrosshair(yCrosshair);
-           if (FL_BPS){
+          // if (FL_BPS){
                crosshairOverlay.addRangeCrosshair(yCrosshair2);
-           }
+          // }
 
             Platform.runLater(() -> {
                 this.chartViewer.getCanvas().addOverlay(crosshairOverlay);
@@ -141,13 +141,17 @@ public class ModernChart {
             if (!xAxis.getRange().contains(x)) {
                 x = Double.NaN;
             }
-            double y = DatasetUtils.findYValue(plot.getDataset(), 0, (int) x);
             this.xCrosshair.setValue((int) x);
-            this.yCrosshair.setValue(y);
+            if(x%2==0){
 
-            if ((plot.getDataset().getSeriesCount() == 2)&&FL_BPS) {
-                double y2 = DatasetUtils.findYValue(plot.getDataset(), 1, (int) x);
-                this.yCrosshair2.setValue(y2);
+                if (plot.getDataset().getSeriesCount() == 2) {
+                    double y2 = DatasetUtils.findYValue(plot.getDataset(), 1, (int) x);
+                    this.yCrosshair2.setValue(y2);
+                }
+            }else{
+
+                double y = DatasetUtils.findYValue(plot.getDataset(), 0, (int) x);
+                this.yCrosshair.setValue(y);
             }
         }
 

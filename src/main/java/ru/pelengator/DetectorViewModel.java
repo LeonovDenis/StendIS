@@ -1912,4 +1912,7 @@ public class DetectorViewModel {
         return order;
     }
 
+    public static byte[] getTempMatrix() {
+        return tempMatrix;
+    }
 }
