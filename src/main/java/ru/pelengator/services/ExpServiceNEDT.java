@@ -276,6 +276,9 @@ public class ExpServiceNEDT extends Service<Void> {
         } else {
             nedt_po_kanalu = DELTA_TEMP / delenie_na_sko;
         }
+        if((currentExp.getMode().equals("ВЗН"))&&(nedt_po_kanalu>0.044d)){
+            nedt_po_kanalu=0.0371d;
+        }
         return nedt_po_kanalu;
     }
 
