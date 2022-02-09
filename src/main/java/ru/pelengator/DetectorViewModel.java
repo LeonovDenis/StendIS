@@ -885,10 +885,19 @@ public class DetectorViewModel {
                 setReset(true);
                 TimeUnit.MILLISECONDS.sleep(time);
                 setReset(false);
+                ///////
+                TimeUnit.MILLISECONDS.sleep(time);
+                Thread thd = new Thread(() -> new Connector().setDesel((byte)-33, 66));
+                thd.setDaemon(true);
+                thd.start();
+                thd.join();
+                TimeUnit.MILLISECONDS.sleep(time);
+                ///////
                 Platform.runLater(() -> {
                     but_powerOn.setText("Включено");
                     but_powerOff.setText("Выключить");
                 });
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -919,6 +928,13 @@ public class DetectorViewModel {
                     setIsPowerOn(false);
                     TimeUnit.MILLISECONDS.sleep(time);
                     setReset(true);
+                    ///////////////////////
+                    TimeUnit.MILLISECONDS.sleep(time);
+                    Thread thd = new Thread(() -> new Connector().setDesel((byte)-1, 66));
+                    thd.setDaemon(true);
+                    thd.start();
+                    TimeUnit.MILLISECONDS.sleep(time);
+                    ////////////////////
                     Platform.runLater(() -> {
                         but_powerOn.setText("Включить");
                         but_powerOff.setText("Выключено");

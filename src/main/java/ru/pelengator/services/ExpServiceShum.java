@@ -139,6 +139,7 @@ public class ExpServiceShum extends Service<Void> {
                 updateMessage("Рассчитал СКО ...." + frameArrayList.size() + " кадров");
                 //считаем шум
                 CalculateShum();
+
                 updateMessage("Рассчитал ШУМ ...." + frameArrayList.size() + " кадров");
                 //сохраняем эксперимент
                 saveExpData();
@@ -298,8 +299,11 @@ public class ExpServiceShum extends Service<Void> {
      * СКО и скреднего значения
      */
     private void CalculateShum() {
+     // boolean  flag = false;
         double summ = 0d;
         double summSred = 0d;
+      //  maxSKO = 0d;
+      //  maxSred= 0d;
         for (int i = start_ch - 1; i < stop_ch; i++) {
             summ += dataArraySKO30[i];
             summSred += dataArrayStat_30[i].getMean();
@@ -313,6 +317,29 @@ public class ExpServiceShum extends Service<Void> {
         }
         shum = summ / countChannel;
         sredZnach30 = summSred / countChannel;
+/////////////////////////////////////////////////////////////////
+   /*     if (detectorViewModel.getMode().equals("ВЗН")) {
+            System.out.println("1");
+            for (int i = start_ch - 1; i < stop_ch; i++) {
+
+                if ((dataArraySKO30[i]) > (shum * 1.9)) {
+                    flag = true;
+                    if (i < 3) {
+                        dataArrayStat_30[i] = dataArrayStat_30[i + 2];
+                        dataArraySKO30[i]= dataArraySKO30[i + 2];
+                    } else {
+                        dataArrayStat_30[i] = dataArrayStat_30[i - 2];
+                        dataArraySKO30[i]= dataArraySKO30[i - 2];
+                    }
+                }
+            }
+            if (flag) {
+                System.out.println("2");
+                CalculateShum();
+
+            }
+        }*/
+////////////////////////////////////////////////////////////////////
     }
 
     /**
